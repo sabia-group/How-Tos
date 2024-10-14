@@ -1,6 +1,8 @@
 Usage
 =====
 
+This is just the original example and needs complete updating or full deletion. We leave it here as example
+
 .. _installation:
 
 Installation
