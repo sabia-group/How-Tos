@@ -1,13 +1,11 @@
-Welcome to Lumache's documentation!
+Welcome to the SabIA Group How-To Examples
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+This is a nice Markdown template. Let us start building this up.
+Links are like this: `Open Food Facts database <https://world.openfoodfacts.org/>`_
+Highlighting text is *simple* and *intuitive* and **so on**.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+These are links :doc:`usage` and :ref:`installation`.
 
 .. note::
 
