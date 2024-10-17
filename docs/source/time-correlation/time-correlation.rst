@@ -43,3 +43,20 @@ where :math:`\mathcal{F}\left[ \cdot \right]` is the Fourier transform of a func
 The Fourier transfrom has a computational cost of :math:`\mathcal{O}\left(N\log N\right)` thanks to the `Fast Foruier Transform (FFT) <https://en.wikipedia.org/wiki/Fast_Fourier_transform>`_ implementations.
 
 For this reason, we will provide a way to evaluate the TCF using this "Fourier transform trick".
+
+.. note::
+    The Fourier transfrom is defined only for integrable functions, i.e. functions whose average value is zero.
+
+    This means that you should always provide arrays whose mean value is zero.
+
+Here is a simple function that returns the TCF of an array with itself:
+
+Function Documentation
+-----------------------
+
+.. autofunction:: tcf.tcf.autocorrelate
+   :noindex:
+
+.. literalinclude:: ../tcf/tcf.py
+   :language: python
+
