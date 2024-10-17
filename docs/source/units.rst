@@ -26,6 +26,7 @@ You can get the values of some physical constants by instantiating a unit system
 The following constants are implemented in all unit-system classes
 
 .. autoclass:: mdtools.units.SI
+    :noindex:
     :exclude-members:
     :member-order: bysource
     :members: hbar, e, kb, amu, me, c
@@ -47,6 +48,29 @@ There is a similar mechanism for getting the base dimensional unit converted to 
 Unit conversion
 ---------------
 
-A "human-readable" unit conversion can be done using the method
+A "human-readable" unit conversion can be done using the methods
 
-    .. automethod:: mdtools.units.SI.str2value
+    .. autoclass:: mdtools.units.SI
+        :noindex:
+        :exclude-members:
+        :member-order: bysource
+        :members: str2base, str2SI
+
+
+.. code-block:: python
+
+    atomic.str2base("1 mp")  # mass of proton in atomic units, prints 1836.15267344
+    atomic.str2SI("1 a0")    # Bohr radius in metres, prints 5.29177210903e-11
+    atomic.str2base("1 fs")  # femtosecond in atomic units of time, 41.341373335335184
+
+
+Conversion to/from wavenumbers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Conversion between base units of energy or radial frequency and wavenumbers (:math:`\text{cm}^{-1}`) is handled separately.
+
+    .. autoclass:: mdtools.units.SI
+        :noindex:
+        :exclude-members:
+        :member-order: bysource
+        :members: energy2wn, wn2energy, omega2wn, wn2omega
