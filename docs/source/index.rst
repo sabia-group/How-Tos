@@ -19,4 +19,4 @@ Contents
 .. toctree::
 
    usage
-   api
+   pimd-files/how-to-rmpd-trpmd-cmd.rst 
