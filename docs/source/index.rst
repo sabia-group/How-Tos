@@ -24,3 +24,4 @@ Contents
    usage
    api
    normal_modes/normal_modes
+   time-correlation/time-correlation
