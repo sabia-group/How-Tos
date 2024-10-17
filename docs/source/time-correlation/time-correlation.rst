@@ -20,11 +20,11 @@ but a general way to evaluate the TCF from the time series of microscopic quanti
 ************************************
 Cross Correlation
 ************************************
-The Time Correlation Functions (TCF) :math:`C_{AB}\left(t\right)` between two observables :math:`A,B` is defined through the `cross correlation <https://en.wikipedia.org/wiki/Cross-correlation>`_ (similar, but not the same of the `convolutuon <https://en.wikipedia.org/wiki/Convolution>`_) of their time series:
+The Time Correlation Functions (TCF) between two observables :math:`A,B` is defined through the `cross correlation <https://en.wikipedia.org/wiki/Cross-correlation>`_ (similar, but not the same of the `convolutuon <https://en.wikipedia.org/wiki/Convolution>`_) of their time series:
 
 .. math::
 
-    C_{AB}\left(\tau\right) = (A \star B)(\tau) \triangleq & \int_{-\infty}^{\infty} \overline{A(t)} B(t+\tau) \, dt \\
+    (A \star B)(\tau) \triangleq & \int_{-\infty}^{\infty} \overline{A(t)} B(t+\tau) \, dt \\
                                                  \triangleq & \int_{-\infty}^{\infty} \overline{A(t-\tau)} B(t)\,dt
                                          
 
@@ -89,16 +89,16 @@ Usage Examples
 ************************************
 Infrared Spectrum
 ************************************
-The Vibrational Infrared Absorption spectrum :math:`S_{\omega}`, at thermal equilibrium, can be evaluated using the time series of the dipole using the following expression:
+The Vibrational Infrared Absorption spectrum :math:`S\left(\omega\right)`, at thermal equilibrium, can be evaluated using the time series of the dipole using the following expression:
 
 .. math::
     S\left(\omega\right) & = \alpha\left(\omega\right) n\left(\omega\right) \\
     & = \frac{\pi \omega}{3 \hbar c \Omega c \varepsilon_0} 
     \left( 1 - e^{-\beta \hbar \omega} \right) 
-    \, \mathcal{F}\left[C_{\mathbf{\mu},\mathbf{\mu}}\right]\left(\omega\right) \\
+    \, \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) \\
     & \stackrel{\beta \ll 1}{ \approx} \, 
     \frac{\beta\omega^2}{6c\Omega\varepsilon_0} 
-    \, \mathcal{F}\left[C_{\mathbf{\mu},\mathbf{\mu}}\right]\left(\omega\right)
+    \, \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right)
 
 where 
     - :math:`\alpha\left(\omega\right)` is the Beer-Lambert absorption coefficient, 
@@ -110,16 +110,16 @@ where
 and clearly 
 
 .. math::
-    \mathcal{F}\left[C_{\mathbf{\mu},\mathbf{\mu}}\right]\left(\omega\right) 
-    \triangleq \int_{-\infty}^{+\infty} e^{-i \omega t} C_{\mathbf{\mu},\mathbf{\mu}}(t) \, dt 
+    \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) 
+    \triangleq \int_{-\infty}^{+\infty} e^{-i \omega t} \boldsymbol{\mu}\star\boldsymbol{\mu}(t) \, dt 
 
 It is important to stress a couple of things:
     - the TCF should actually be calculated for the fluctuation of the dipole w.r.t. to its average value:
 
     .. math::
-        C_{\mathbf{\mu},\mathbf{\mu}}(t) \longrightarrow C_{\delta\mathbf{\mu},\delta\mathbf{\mu}}(t) 
+        \boldsymbol{\mu}\star\boldsymbol{\mu}(t) \longrightarrow C_{\delta\boldsymbol{\mu},\delta\boldsymbol{\mu}}(t) 
         \quad \text{with} \quad
-        \delta\mathbf{\mu} = \mathbf{\mu} - \braket{\mu}
+        \delta\boldsymbol{\mu} = \boldsymbol{\mu} - \braket{\boldsymbol{\mu}}
     and this means that, before computing any Fourier transform, one should remove the mean value of the time series.
     However, we will keep using the same notation as before for simplicity.
 
@@ -127,7 +127,7 @@ It is important to stress a couple of things:
     The TCF of the dipole with itself is also time-reversible, i.e.
 
     .. math::
-        C_{\mathbf{\mu},\mathbf{\mu}}(t) = C_{\mathbf{\mu},\mathbf{\mu}}(-t)
+        \left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)(t) = \left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)(-t)
     and this implies that its Fourier transform in purely real.
 
     However, in numerical implementation we can only evaluate the monolateral Fourier transform :math:`\tilde{\mathcal{F}}[ \cdot ]`, whose output is complex since no integration over time for :math:`t\lt 0` occurs.
@@ -137,11 +137,30 @@ It is important to stress a couple of things:
     .. math::
         S\left(\omega\right) = &
         \frac{\beta\omega^2}{6c\Omega\varepsilon_0} 
-        \, 2 \, {\rm Re} \tilde{\mathcal{F}}\left[C_{\mathbf{\mu},\mathbf{\mu}}\right]\left(\omega\right) \\
+        \, 2 \, {\rm Re} \tilde{\mathcal{F}}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) \\
         = & 
         \frac{\beta\omega^2}{3c\Omega\varepsilon_0} 
         {\rm Re} 
-        \int_{0}^{+\infty} e^{-i \omega t} C_{\mathbf{\mu},\mathbf{\mu}}\left(t\right) \, dt 
+        \int_{0}^{+\infty} e^{-i \omega t} \left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)\left(t\right) \, dt 
 
+************************************
+A common trick
+************************************
+| Numerical simulations providing the dynamics over time of the dipole (as well as any other quantity) can be used to evaluate the previous formulas only if the simulat time is long enough and the dynamics is properly captured, i.e. if the integration time step is small enough.
+| In certain systems, like liquid water, properly sampling the long time behavior of :math:`\left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)\left(t\right)`, i.e. the low frequency behavior of its Fourier transform, can be challenging due to its intrisically "low dynamics".
+| This means that to properly sample the low frequrncy region of :math:`S\left(\omega\right)`, extremely long simulations would be needed.
+| There is however a possible, or partial, solution that can be applied to the infrared spectrum, which consists in relating :math:`\left(\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right)\left(t\right)` with :math:`\boldsymbol{\mu}\star\boldsymbol{\mu}(t)`, i.e. the TCF of the dipole time derivative.
+| It is not hard to show that:
 
+.. math::
+    \omega^2 \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) = 
+    \mathcal{F}\left[\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right]\left(\omega\right)
 
+| This relation shows that the TCF of the dipole time derivative decays faster, and we can also use this TCF to evaluate the infrared spectrum:
+    
+    .. math::
+        S\left(\omega\right)
+        = 
+        \frac{\beta}{3c\Omega\varepsilon_0} 
+        {\rm Re} 
+        \int_{0}^{+\infty} e^{-i \omega t} \left(\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right)\left(t\right) \, dt 
