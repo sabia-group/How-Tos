@@ -1,3 +1,4 @@
+.. _abs-spectrum:
 #########################
 Linear absorption spectra
 #########################
@@ -40,7 +41,7 @@ can also be used. In both cases the damping function :math:`f(t)` is just multip
 Example of benzene
 *******************
 
-Specifically, in FHI-aims with Ehrenfest dynamics, only the electronic dipole moment is output. The nuclear dipole moment has to be calculated seperately from the trajectory of the nuclei and added to it. The dipole output for three separate field directions has been provided in the ``output_files`` folder [#f1]_.
+Specifically, in FHI-aims with Ehrenfest dynamics, only the electronic dipole moment is output. The nuclear dipole moment has to be calculated seperately from the trajectory of the nuclei and added to it. The total dipole output for three separate field directions has been provided in the ``output_files`` folder [#f1]_. The tutorial :ref:`eh-dynamics` explains how to create the output in FHI-aims.
 
 The evolution of the total (nuclear and electronic) dipole moment :math:`\mu (t)` looks like this
 

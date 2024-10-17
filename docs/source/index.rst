@@ -20,5 +20,5 @@ Contents
 
    usage
    api
-   test
+   eh_dynamics
    abs_spectrum
