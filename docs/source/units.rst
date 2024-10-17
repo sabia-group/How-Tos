@@ -2,11 +2,11 @@ Unit systems
 ============
 
 
-.. automodule:: mdtools.units
+.. automodule:: tools.units
     :member-order: bysource
     :members: atomic, hartAng, kcalAfs, kcalAamu, eVAamu
 
-    .. autoclass:: mdtools.units.SI
+    .. autoclass:: tools.units.SI
         :exclude-members:
 
 Physical constants
@@ -25,7 +25,7 @@ You can get the values of some physical constants by instantiating a unit system
 
 The following constants are implemented in all unit-system classes
 
-.. autoclass:: mdtools.units.SI
+.. autoclass:: tools.units.SI
     :noindex:
     :exclude-members:
     :member-order: bysource
@@ -50,7 +50,7 @@ Unit conversion
 
 A "human-readable" unit conversion can be done using the methods
 
-    .. autoclass:: mdtools.units.SI
+    .. autoclass:: tools.units.SI
         :noindex:
         :exclude-members:
         :member-order: bysource
@@ -69,7 +69,7 @@ Conversion to/from wavenumbers
 
 Conversion between base units of energy or radial frequency and wavenumbers (:math:`\text{cm}^{-1}`) is handled separately.
 
-    .. autoclass:: mdtools.units.SI
+    .. autoclass:: tools.units.SI
         :noindex:
         :exclude-members:
         :member-order: bysource

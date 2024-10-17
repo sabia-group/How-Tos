@@ -158,3 +158,6 @@ cython_debug/
 # VS Code stuff
 .vscode
 *.code-workspace
+
+# updating PYTHONPATH
+env.sh 

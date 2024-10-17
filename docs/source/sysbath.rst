@@ -11,10 +11,15 @@ A dissipative environment can be represented by a set of harmonic oscillators, s
 Bath discretization
 -------------------
 
-We follow the recipe in Rev. [1]
+.. automodule:: tools.baths
+    
+    .. autoclass:: tools.baths.BaseSpectralDensity
+        :class-doc-from: init
+        :member-order: bysource
+        :members:
+
+    .. autoclass:: tools.baths.ExpOhmic
+        :class-doc-from: init
+        :show-inheritance:
 
 
-References
-----------
-
-1. Hi there
