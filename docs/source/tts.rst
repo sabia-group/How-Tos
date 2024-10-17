@@ -60,9 +60,10 @@ where the values of normal coordinates :math:`\Omega_c` are sampled from the har
 .. math::
     p(\Omega_{1,c}, \dots, \Omega_{N_\mathrm{vib},c})
     =
-    \prod_{i=1}^{N_\mathrm{vib}} \mathrm{exp} \left( -\frac{1}{2}\beta\omega_{i,c}^2 \Omega_{i,c}^2 \right).
+    \prod_{i=1}^{N_\mathrm{vib}} \mathrm{exp} \left( -\frac{1}{2}\beta\omega_{i,c}^2 \Omega_{i,c}^2 \right)
 
 at an inverse temperature :math:`\beta = (k_\mathbf{B} T)^{-1}`.
+Note that imaginary-frequency modes are ommited as they correspond to the reactive direction which is already accounted for.
 Choosing `sampling_mode='quantum'` invokes the calculation of the effective quantum inverse temperature
 
 .. math::
