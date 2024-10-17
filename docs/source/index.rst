@@ -19,9 +19,7 @@ These are links :doc:`usage` and :ref:`installation`.
 Contents
 --------
 
-.. toctree::
-
-   :maxdepth: 2
+.. toctree:: :maxdepth: 2
 
    usage
    api
