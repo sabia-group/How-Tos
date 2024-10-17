@@ -19,9 +19,9 @@ These are links :doc:`usage` and :ref:`installation`.
 Contents
 --------
 
-.. toctree:: :maxdepth: 2
+.. toctree:: :maxdepth: 1
 
    usage
    api
-   normal_modes/normal_modes
+   normal-modes/normal-modes
    time-correlation/time-correlation
