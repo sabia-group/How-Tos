@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # -*-coding:utf-8 -*-
 '''
-@File    :   units.py
-@Time    :   2024/10/17 10:12:25
-@Author  :   George Trenins
-@Contact :   gstrenin@gmail.com
-@Desc    :   Define some common unit systems, converting to and from SI.
+Some common unit systems for converting to and from SI. A unit system is defined in terms of seven *base units* that span the dimensions of length, mass, time, electric current, amount of substance, luminous intensity, and thermodynamic temperature.
 '''
 
 
@@ -98,10 +94,56 @@ def _convert_to(quantity, base_units):
 
 
 class SI(object):
-    """SI unit systems with the base units of metre, kilogram, second, ampere, mole, candela and Kelvin.
+    """Base units of metre, kilogram, second, ampere, mole, candela and Kelvin.
     """
 
     base_units = (u.meter, u.kilogram, u.second, u.ampere, u.mol, u.cd, u.K)
+
+    # Physical constants
+    @property
+    def hbar(self):
+        """
+        Value of the reduced Planck constant in base units.
+        """
+        return float(self.in_base(u.hbar).as_two_terms()[0])
+
+    @property
+    def e(self):
+        """
+        Absolute value of the charge of the electron in base units.
+        """
+        return float(self.in_base(u.elementary_charge).as_two_terms()[0])
+
+    @property
+    def kb(self):
+        """
+        Boltzmann constant in base units.
+        """
+        return float(self.in_base(u.boltzmann_constant).as_two_terms()[0])
+
+    @property
+    def amu(self):
+        """
+        Atomic mass unit (Dalton) in base units.
+        """
+        return float(self.in_base(u.amu).as_two_terms()[0])
+
+    @property
+    def m_e(self):
+        """
+        Mass of the electron in base units.
+        """
+        return float(self.in_base(me).as_two_terms()[0])
+
+    me = m_e
+
+    @property
+    def c(self):
+        """
+        Speed of light in vacuum, in base units.
+        """
+        return float(self.in_base(u.c).as_two_terms()[0])
+
 
     def in_base(self, quantity):
         """
@@ -115,10 +157,26 @@ class SI(object):
         return _convert_to(quantity, self.base_units)
 
     def in_SI(self, quantity):
+        """
+        Convert a quantity to SI units.
+
+        :param quantity: a physical quantity: unit of measure, constant or a generic quantity.
+        :type quantity: sympy.physics.units.quantities.Quantity
+        :return: converted quantity
+        :rtype: sympy.physics.units.quantities.Quantity
+        """
         return _convert_to(quantity, SI.base_units)
     
-    def str2valunit(self, string):
-        string_list = string.split()
+    def str2valunit(self, quantity):
+        """
+        Given a string representation of a quantity, such as '1 mm', return a 2-tuple containing the numerical value (in this case, `1`) and the unit object (in this case, `sympy.physics.units.millimeter`)
+
+        :param quantity: a physical quantity in the format 'value unit'
+        :type quantity: string
+        :return: a value-unit tuple
+        :rtype: tuple[float, sympy.physics.units.Quantity]
+        """
+        string_list = quantity.split()
         if len(string_list) == 1:
             value = string_list[0]
             uobj = None
@@ -144,6 +202,14 @@ class SI(object):
         return valnum, uobj
     
     def str2base(self, string):
+        """
+        Given a string representation of a quantity, such as '1 mm', return the corresponding numerical value in base units. If not of type `str`, the input us returned unchanged. If the string contains no units, it is simply converted to a float.
+
+        :param quantity: a physical quantity in the format 'value unit'
+        :type quantity: string
+        :return: converted quantity
+        :rtype: float
+        """
         if type(string) is str:
             value, unit = self.str2valunit(string)
             if unit is None:
@@ -154,6 +220,9 @@ class SI(object):
             return string
         
     def str2SI(self, string):
+        """
+        Return the numerical value of the input string in SI units. See `str2base` for details.
+        """
         if type(string) is str:
             value, unit = self.str2valunit(string)
             if unit is None:
@@ -173,67 +242,82 @@ class SI(object):
             return float(
                 u.convert_to(self.in_base(dim), SI_units).n().as_two_terms()[0])
 
-    # Physical constants
-    @property
-    def hbar(self):
-        return float(self.in_base(u.hbar).as_two_terms()[0])
-
-    @property
-    def e(self):
-        return float(self.in_base(u.elementary_charge).as_two_terms()[0])
-
-    @property
-    def kb(self):
-        return float(self.in_base(u.boltzmann_constant).as_two_terms()[0])
-
-    @property
-    def amu(self):
-        return float(self.in_base(u.amu).as_two_terms()[0])
-
-    @property
-    def m_e(self):
-        return float(self.in_base(me).as_two_terms()[0])
-
-    me = m_e
-
-    @property
-    def c(self):
-        return float(self.in_base(u.c).as_two_terms()[0])
-
     # Temperature conversion
     def betaTemp(self, beta):
+        r"""Perform the conversion :math:`\beta = 1/k_B T`
+
+        :param beta: thermodynamic temperature in base units
+        :type quantity: float
+        :return: :math:`\beta = 1/k_B T` in base units
+        :rtype: float
+        """
         return 1.0/(self.kb*beta)
     
     # Wavenumber conversion
     def energy2wn(self, E):
+        r"""Convert from energy to wavenumbers.
+
+        :param E: energy in base units
+        :type quantity: float
+        :return: wavenumber in :math:`\mathrm{cm}^{-1}`
+        :rtype: float
+        """
         return E * self.energy*self.time / (
             200*math.pi*self.c*self.hbar * self.length*self.action)
     
     def wn2energy(self, wn):
+        r"""Convert from wavenumbers to energy.
+
+        :param wn: wavenumber in :math:`\mathrm{cm}^{-1}`
+        :type quantity: float
+        :return: energy in base units
+        :rtype: float
+        """
         return 200*math.pi*self.c*self.hbar*wn * self.length*self.action / (
             self.energy*self.time)
     
     def omega2wn(self, w):
+        r"""Convert from radial frequency to wavenumbers.
+
+        :param w: radial frequency in units of rad per base unit of time
+        :type quantity: float
+        :return: wavenumber in :math:`\mathrm{cm}^{-1}`
+        :rtype: float
+        """
         return w / ( 200*math.pi * (self.c * self.length) )
 
     def wn2omega(self, wn):
+        r"""Convert from wavenumbers to radial frequency .
+
+        :param wn:  wavenumber in :math:`\mathrm{cm}^{-1}`
+        :type quantity: float
+        :return: radial frequency in units of rad per base unit of time
+        :rtype: float
+        """
         return wn * ( 200*math.pi * (self.c * self.length) )
 
 
 class atomic(SI):
+    r"""Base units of :math:`\hbar`, mass of electron, Bohr radius, and charge of electron.
+    """
     base_units = (u.hbar, u.elementary_charge, a0, me, u.mol, u.cd, u.K)
 
 class hartAng(SI):
+    r"""Base units of :math:`\hbar`, Hartree, angstrom, and charge of electron.
+    """
     base_units = (u.hbar, u.elementary_charge, aa, Eh, u.mol, u.cd, u.K)
 
 class kcalAfs(SI):
+    r"""Base units of :math:`\text{kcal}\cdot\text{mol}^{-1}`, angstrom, femtosecond, and :math:`1/4\pi\epsilon_0`
+    """
     base_units = (kcal_mol, aa, fs, coulomb_constant, u.mol, u.cd, u.K)
 
 class kcalAamu(SI):
+    r"""Base units of :math:`\text{kcal}\cdot\text{mol}^{-1}`, angstrom, Dalton, and :math:`1/4\pi\epsilon_0`
+    """
     base_units = (kcal_mol, aa, u.amu, coulomb_constant, u.mol, u.cd, u.K)
 
 class eVAamu(SI):
+    r"""Base units of electronvolt, angstrom, Dalton, and coulomb
+    """
     base_units = (u.electronvolt, aa, u.amu, u.coulomb, u.mol, u.cd, u.K)
-
-class cmbohramu(SI):
-    base_units = (wn, a0, u.amu, u.coulomb, u.mol, u.cd, u.K)
