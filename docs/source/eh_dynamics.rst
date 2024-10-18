@@ -57,5 +57,5 @@ We can also control what is output to standard output (first letter) and to a se
 Set up the ``geometry.in`` file
 ********************************
 
-.. rubic:: Footnotes
+.. rubric:: Footnotes
 .. [#f1] However outputting only every 0.5 a.u. does not work right now, the Ehrenfest trajectory is output every 0.05 a.u.

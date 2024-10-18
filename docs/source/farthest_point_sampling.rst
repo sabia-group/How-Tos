@@ -43,11 +43,13 @@ For more information, see the following references:
 1. Reading the atomic coordinated using ASE.
 
 .. code-block:: python
+
     frames = read(structure_file, index=':', format='extxyz')
 
 2. Initilizing the SOAP hyperparameters.
 
 .. code-block:: python
+
     SOAP_HYPERS = {
         "interaction_cutoff": 3.5,
         "max_radial": 6,
@@ -56,19 +58,23 @@ For more information, see the following references:
         "cutoff_smooth_width": 0.5,
         "gaussian_sigma_type": "Constant",
     }
+
 3. Transforming atomic coordinates into SOAP descriptors.
 
 .. code-block:: python
+
      x = soap.transform(frame).get_features(soap).mean(axis=0)
 
 4. Perform FPS on the samples.
 
 .. code-block:: python
+
     struct_idx = FPS(n_to_select=n_FPS, initialize = 123).fit(X.T).selected_idx_
 
 5. Visualize the FPS selected samples by performing PCA on SOAP descriptors. (Here one can use any dimensionality reduction technique)
 
 .. code-block:: python
+
     X_full = StandardFlexibleScaler(column_wise=False).fit_transform(X_full)
     T = PCA(n_components=2).fit_transform(X_full)
 
