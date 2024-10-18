@@ -12,7 +12,7 @@ Contents
 --------
 
 .. toctree::
-
    :maxdepth: 2
+
    pimd-files/how-to-rmpd-trpmd-cmd.rst 
    remote_dev
