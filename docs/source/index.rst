@@ -31,6 +31,7 @@ How To ...
    gle
    units
    thermostats
+   python_aesth/SPAwPy
 
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
