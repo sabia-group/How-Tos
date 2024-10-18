@@ -76,4 +76,7 @@ Apart from the usual ``aims.out`` file with the given ``control.in`` input four 
 .. note::
    Somethings important to keep in mind, is that the Ehrenfest trajectory is output every time step even if a larger output time step was choosen. Moreover, the dipole moment only contains the contribution from the electrons (not taking into account the negative sign of the electronic charge). Nuclear dipole moment has to be computed from the nuclei trajectory.
 
-An easy test is to look at the total energy and check if it is conserved after the external field is gone. 
+An easy test is to look at the total energy and check if it is conserved after the external field is gone.
+
+.. rubric:: Footnotes
+.. [#f1] However outputting only every 0.5 a.u. does not work right now, the Ehrenfest trajectory is output every 0.05 a.u.

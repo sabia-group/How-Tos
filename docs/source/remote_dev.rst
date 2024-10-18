@@ -1,5 +1,5 @@
 ####################################
-How To: Remote Development on MPCDF Clusters
+Remote Development on MPCDF Clusters
 ####################################
 
 Maintainer: Zekun Lou
