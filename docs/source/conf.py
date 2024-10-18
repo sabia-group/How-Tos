@@ -21,12 +21,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-<<<<<<< HEAD
-    'nbsphinx'
-]
-
-source_suffix = [".rst", ".md"]
-=======
     'nbsphinx',
     'sphinx.ext.viewcode',  # This allows linking or embedding source code
     'sphinx_copybutton' # pip install sphinx-copybutton
@@ -34,7 +28,6 @@ source_suffix = [".rst", ".md"]
 
 # testing web code rendering
 autosummary_generate = True
->>>>>>> main
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
