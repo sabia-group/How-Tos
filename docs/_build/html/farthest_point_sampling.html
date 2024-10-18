@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farthest Point Sampling (FPS) &mdash; SabIA-How-To 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=44496db0"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Temperature spacing for replica exchange molecular dynamics simulations" href="remd_coefficient_search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SabIA-How-To
+          </a>
+              <div class="version">
+                0.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remd_coefficient_search.html">Temperature spacing for replica exchange molecular dynamics simulations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Farthest Point Sampling (FPS)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-perfrom-fps-on-a-pool-of-data-points">How to perfrom FPS on a pool of data points?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SabIA-How-To</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Farthest Point Sampling (FPS)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/farthest_point_sampling.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="farthest-point-sampling-fps">
+<h1>Farthest Point Sampling (FPS)<a class="headerlink" href="#farthest-point-sampling-fps" title="Permalink to this heading"></a></h1>
+<div class="line-block">
+<div class="line">Farthest Point Sampling determine a data subset that maximizes the variance in the distribution of the features or samples.</div>
+</div>
+<div class="line-block">
+<div class="line">In FPS, the selection of the first point is made at random or by a separate metric. Each subsequent selection is made to maximize the Haussdorf distance, i.e. the minimum distance between a point and all previous selections.</div>
+</div>
+<div class="math notranslate nohighlight">
+\[*_{m+1} = argmax_{j} \left\{ min_{i \in *_{m}} [d(i, j)] \right\}\]</div>
+<div class="line-block">
+<div class="line">where ∗m contains the previous selections, ∗m+1 is the next selected sample or feature, and d(i, j) indicates the distance between the ith and jth column or row.</div>
+</div>
+<div class="line-block">
+<div class="line">For machine learning potentials, FPS can be used to select the initial training set from a pool of data points. Also, FPS can be used for feature selection in case of Behler-Parrinello based machine learning potentials.</div>
+</div>
+<p>For more information, see the following references:
+<a class="reference external" href="https://scikit-matter.readthedocs.io/en/v0.1.4/selection.html#fps-api">Feature and Sample selection methods</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The FPS algorithm works on atomic environments of a system. So, to perform FPS on a pool of data points, one needs to convert atomic coordinates into atomic environments e.g. SOAP, ACSF, etc.</p>
+</div>
+<section id="how-to-perfrom-fps-on-a-pool-of-data-points">
+<h2>How to perfrom FPS on a pool of data points?<a class="headerlink" href="#how-to-perfrom-fps-on-a-pool-of-data-points" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">1. Install <a class="reference external" href="https://github.com/lab-cosmo/librascal">librascal</a> which is used to convert atomic positions into SOAP descriptors.</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>How to compile librascal?</p>
+<div class="line-block">
+<div class="line">1. conda create -n rascal</div>
+<div class="line">2. conda install python==3.9 (!! cation: do not use python version above 3.10, you wont be able to compile it because in newer versions The PyFrameObject structure members have been removed from the public C API).</div>
+<div class="line">3. mkdir build</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">2. Install <a class="reference external" href="https://scikit-matter.readthedocs.io/en/v0.1.4/selection.html#fps-api">scikit-matter</a> which have the FPS API.</div>
+</div>
+</section>
+<section id="diving-into-the-code">
+<h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this heading"></a></h2>
+<p>1. Reading the atomic coordinated using ASE.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">frames</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">structure_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>2. Initilizing the SOAP hyperparameters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SOAP_HYPERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;interaction_cutoff&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+    <span class="s2">&quot;max_radial&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;max_angular&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;gaussian_sigma_constant&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+    <span class="s2">&quot;cutoff_smooth_width&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;gaussian_sigma_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Constant&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>3. Transforming atomic coordinates into SOAP descriptors.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">soap</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">soap</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>4. Perform FPS on the samples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct_idx</span> <span class="o">=</span> <span class="n">FPS</span><span class="p">(</span><span class="n">n_to_select</span><span class="o">=</span><span class="n">n_FPS</span><span class="p">,</span> <span class="n">initialize</span> <span class="o">=</span> <span class="mi">123</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">selected_idx_</span>
+</pre></div>
+</div>
+<p>5. Visualize the FPS selected samples by performing PCA on SOAP descriptors. (Here one can use any dimensionality reduction technique)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_full</span> <span class="o">=</span> <span class="n">StandardFlexibleScaler</span><span class="p">(</span><span class="n">column_wise</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_full</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_full</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/fps.png"><img alt="fps" class="align-center" src="_images/fps.png" style="width: 400px;" /></a>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="remd_coefficient_search.html" class="btn btn-neutral float-left" title="Temperature spacing for replica exchange molecular dynamics simulations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, SabIA Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

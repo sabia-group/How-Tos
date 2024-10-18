@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temperature spacing for replica exchange molecular dynamics simulations &mdash; SabIA-How-To 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=44496db0"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Farthest Point Sampling (FPS)" href="farthest_point_sampling.html" />
+    <link rel="prev" title="lumache" href="generated/lumache.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SabIA-How-To
+          </a>
+              <div class="version">
+                0.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Temperature spacing for replica exchange molecular dynamics simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="farthest_point_sampling.html">Farthest Point Sampling (FPS)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SabIA-How-To</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Temperature spacing for replica exchange molecular dynamics simulations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/remd_coefficient_search.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Temperature-spacing-for-replica-exchange-molecular-dynamics-simulations">
+<h1>Temperature spacing for replica exchange molecular dynamics simulations<a class="headerlink" href="#Temperature-spacing-for-replica-exchange-molecular-dynamics-simulations" title="Permalink to this heading"></a></h1>
+<p>This notebooks is to generate the temperature spacing for efficeint swaping in replica exchange molecular dynamics method.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set global parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># Figure size in inches (width, height)</span>
+<span class="c1"># plt.rcParams[&#39;figure.dpi&#39;] = 150  # Figure resolution in dots per inch</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;sans-serif&#39;</span>  <span class="c1"># Font family</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.sans-serif&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Fira Sans&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># Font size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Font size of x and y labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.titlesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">18</span>  <span class="c1"># Font size of title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.grid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Show grid by default</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># Line width</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.markersize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Marker size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;legend.fontsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># Font size of legend</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;matplotlib.font_manager&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># change the working directory where you have i-pi generated short remd data</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;./short_remd_coefficient_search/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># one needs to sort the output from i-pi in accordance with the temperature</span>
+<span class="c1"># !python3 remdsort.py input_remd.xml</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reading all the outputs of the replicas</span>
+
+<span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_simulation.out&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SRT&quot;</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">properties</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">continue</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])}</span>
+</pre></div>
+</div>
+</div>
+<p>Deriving the constants for temperature spacing alorigthm</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Constants</span>
+<span class="n">kb</span> <span class="o">=</span> <span class="mf">8.617333262145e-5</span> <span class="c1"># Boltzmann constant in eV/K</span>
+<span class="n">Natoms</span> <span class="o">=</span> <span class="mi">27</span> <span class="c1"># 3x3 1H-TaS2 supercell</span>
+<span class="n">Ndf</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">Natoms</span><span class="o">-</span><span class="mi">3</span> <span class="c1"># degrees of freedom</span>
+</pre></div>
+</div>
+</div>
+<p>Using last 10ps of trajectory to compute ensemble averages</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avg_potentials</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">10000</span><span class="p">:,</span><span class="mi">6</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+<span class="n">ensemble_temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">10000</span><span class="p">:,</span><span class="mi">9</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+<span class="n">observed_temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">10000</span><span class="p">:,</span><span class="mi">3</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+<span class="n">std_potentials</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">10000</span><span class="p">:,</span><span class="mi">6</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Ndf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Ensemble temperatures: </span><span class="si">{</span><span class="n">ensemble_temps</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Observed temperatures: </span><span class="si">{</span><span class="n">observed_temps</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Ensemble temperatures: [ 50.  53.  56.  59.  62.  65.  68.  71.  74.  77.  80.  83.  86.  89.
+  92.  95.  98. 101. 104. 107. 110.]
+
+Observed temperatures: [ 50.26108535  53.20330219  56.25668929  59.20290569  62.27423155
+  65.17519428  67.91214192  71.20242199  74.01436144  76.92244628
+  79.98700373  82.81899827  85.86762277  88.79839426  91.50337063
+  94.81545514  97.99874072 100.58586705 103.75503566 106.71843229
+ 109.8139592 ]
+</pre></div></div>
+</div>
+<p>Computing constants:</p>
+<div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(\mu\)</span> = <span class="math notranslate nohighlight">\((B_{0} + B_{1}.T)N_{atoms}\)</span> - <span class="math notranslate nohighlight">\(3.k_{B}.T\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(\sigma\)</span> = <span class="math notranslate nohighlight">\((D_{0} + D_{1}.T)\sqrt{N_{df}}\)</span></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_avg_potentials</span> <span class="o">=</span> <span class="p">(</span><span class="n">avg_potentials</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">kb</span> <span class="o">*</span> <span class="n">ensemble_temps</span><span class="p">)</span><span class="o">/</span><span class="n">Natoms</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Mean Potential Energy vs Ensemble Temperature&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ensemble_temps</span><span class="p">,</span> <span class="n">scaled_avg_potentials</span> <span class="p">,</span><span class="s1">&#39;o--&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Ensemble Temperature (K)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;($\mu$+$3.k_</span><span class="si">{B}</span><span class="s1">.T$) / $Natoms$ (eV)&#39;</span><span class="p">)</span>
+<span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">ensemble_temps</span><span class="p">,</span> <span class="n">scaled_avg_potentials</span><span class="p">)</span>
+<span class="n">B0</span><span class="p">,</span> <span class="n">B1</span> <span class="o">=</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Slope B_1: </span><span class="si">{</span><span class="n">slope</span><span class="si">}</span><span class="s1"> eV/K, Intercept B_0: </span><span class="si">{</span><span class="n">intercept</span><span class="si">}</span><span class="s1"> eV, R-squared: </span><span class="si">{</span><span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Slope B_1: 0.0001261751193934205 eV/K, Intercept B_0: -152996.29528628185 eV, R-squared: 0.9999451545563839
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/remd_coefficient_search_13_1.png" src="_images/remd_coefficient_search_13_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Standard Deviation of Potential Energy vs Ensemble Temperature&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ensemble_temps</span><span class="p">,</span> <span class="n">std_potentials</span> <span class="p">,</span><span class="s1">&#39;o--&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Ensemble Temperature (K)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\sigma$/$\sqrt{N_</span><span class="si">{df}</span><span class="s1">}$ (eV)&#39;</span><span class="p">)</span>
+<span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">ensemble_temps</span><span class="p">,</span> <span class="n">std_potentials</span><span class="p">)</span>
+<span class="n">D0</span><span class="p">,</span> <span class="n">D1</span> <span class="o">=</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Slope D_1: </span><span class="si">{</span><span class="n">slope</span><span class="si">}</span><span class="s1"> eV/K, Intercept D_0: </span><span class="si">{</span><span class="n">intercept</span><span class="si">}</span><span class="s1"> eV, R-squared: </span><span class="si">{</span><span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Slope D_1: 5.800812914842667e-05 eV/K, Intercept D_0: 9.350154882901713e-05 eV, R-squared: 0.998153170144406
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/remd_coefficient_search_14_1.png" src="_images/remd_coefficient_search_14_1.png" />
+</div>
+</div>
+<p>Acceptance probability</p>
+<p>Mean and std. deviation for difference in potential energy</p>
+<div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(\mu_{12} = B_{1}(T_{2}-T_{1})N_{atoms} - 3k_{B}(T_{2}-T_{1})\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(\sigma_{12} = D_{1}(T_{2}-T_{1})\sqrt{N_{df}}\)</span></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">erf</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">root_scalar</span>
+
+<span class="k">class</span> <span class="nc">ComputeTempSpacings</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">Natoms</span><span class="p">,</span> <span class="n">Ndf</span><span class="p">,</span> <span class="n">kb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B0</span> <span class="o">=</span> <span class="n">B0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B1</span> <span class="o">=</span> <span class="n">B1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">D0</span> <span class="o">=</span> <span class="n">D0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">D1</span> <span class="o">=</span> <span class="n">D1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T1</span> <span class="o">=</span> <span class="n">T1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Natoms</span> <span class="o">=</span> <span class="n">Natoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ndf</span> <span class="o">=</span> <span class="n">Ndf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kb</span> <span class="o">=</span> <span class="n">kb</span>
+
+    <span class="k">def</span> <span class="nf">mu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B1</span> <span class="o">*</span> <span class="p">(</span><span class="n">T2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">T1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Natoms</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kb</span> <span class="o">*</span> <span class="p">(</span><span class="n">T2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">T1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sigma</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">D1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ndf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">T2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">T1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kb</span> <span class="o">*</span> <span class="n">T2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kb</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T2</span><span class="p">):</span>
+        <span class="n">mu_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span>
+        <span class="n">sigma_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span>
+        <span class="n">C_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span>
+
+        <span class="c1"># for numerical stability we use log probabilities</span>
+        <span class="n">log_one</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">erf</span><span class="p">(</span><span class="o">-</span><span class="n">mu_val</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma_val</span><span class="p">)))</span>
+        <span class="n">log_second</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">C_val</span> <span class="o">*</span> <span class="n">mu_val</span> <span class="o">+</span> <span class="p">(</span><span class="n">C_val</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">log_third</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">erf</span><span class="p">((</span><span class="n">mu_val</span> <span class="o">+</span> <span class="n">C_val</span> <span class="o">*</span> <span class="n">sigma_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+
+        <span class="n">log_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="p">(</span><span class="n">log_one</span><span class="p">,</span> <span class="n">log_second</span> <span class="o">+</span> <span class="n">log_third</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_prob</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">find_T2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_prob</span><span class="p">,</span> <span class="n">T2_guess_low</span><span class="p">,</span> <span class="n">T2_guess_high</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">equation</span><span class="p">(</span><span class="n">T2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span> <span class="o">-</span> <span class="n">target_prob</span>
+
+        <span class="n">solution</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">equation</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="p">[</span><span class="n">T2_guess_low</span><span class="p">,</span> <span class="n">T2_guess_high</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;brentq&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">solution</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">solution</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Solution did not converge&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Natoms</span> <span class="o">=</span> <span class="mi">1404</span> <span class="c1"># This need to be changed for required system; here (6xroot13) 1T-TaS2 supercell</span>
+<span class="n">Ndf</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">Natoms</span><span class="o">-</span><span class="mi">3</span> <span class="c1"># degrees of freedom</span>
+<span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span> <span class="o">=</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span>
+<span class="n">T1</span><span class="p">,</span> <span class="n">T_final</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span> <span class="c1"># initial and final temperatures</span>
+<span class="n">target_prob</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="c1"># target acceptance probability for swapping (T1-T2)</span>
+<span class="n">T2</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># just a placeholder</span>
+
+<span class="n">T1s</span><span class="p">,</span> <span class="n">T2s</span><span class="p">,</span> <span class="n">delta_Ts</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of atoms: </span><span class="si">{</span><span class="n">Natoms</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Degrees of freedom: </span><span class="si">{</span><span class="n">Ndf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Values of constants: B0=</span><span class="si">{</span><span class="n">B0</span><span class="si">}</span><span class="s2"> eV, B1=</span><span class="si">{</span><span class="n">B1</span><span class="si">}</span><span class="s2"> eV/K, D0=</span><span class="si">{</span><span class="n">D0</span><span class="si">}</span><span class="s2"> eV, D1=</span><span class="si">{</span><span class="n">D1</span><span class="si">}</span><span class="s2"> eV/K&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inital temperature: </span><span class="si">{</span><span class="n">T1</span><span class="si">}</span><span class="s2"> K</span><span class="se">\t</span><span class="s2">Final temperature: </span><span class="si">{</span><span class="n">T_final</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target acceptance probability for swapping (T1-T2): </span><span class="si">{</span><span class="n">target_prob</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total number of atoms: 1404
+Degrees of freedom: 4209
+Values of constants: B0=-152996.29528628185 eV, B1=0.0001261751193934205 eV/K, D0=9.350154882901713e-05 eV, D1=5.800812914842667e-05 eV/K
+Inital temperature: 50 K        Final temperature: 150 K
+Target acceptance probability for swapping (T1-T2): 0.25
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># change the directory where you want to save the temperature spacing search log</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/classical_remd/&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting temperature spacing search...&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;temperature_spacing_search.log&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total number of atoms: </span><span class="si">{</span><span class="n">Natoms</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Degrees of freedom: </span><span class="si">{</span><span class="n">Ndf</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Values of constants: B0=</span><span class="si">{</span><span class="n">B0</span><span class="si">}</span><span class="s2"> eV, B1=</span><span class="si">{</span><span class="n">B1</span><span class="si">}</span><span class="s2"> eV/K, D0=</span><span class="si">{</span><span class="n">D0</span><span class="si">}</span><span class="s2"> eV, D1=</span><span class="si">{</span><span class="n">D1</span><span class="si">}</span><span class="s2"> eV/K</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inital temperature: </span><span class="si">{</span><span class="n">T1</span><span class="si">}</span><span class="s2"> K</span><span class="se">\t</span><span class="s2">Final temperature: </span><span class="si">{</span><span class="n">T_final</span><span class="si">}</span><span class="s2"> K</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target acceptance probability for swapping (T1-T2): </span><span class="si">{</span><span class="n">target_prob</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">T2</span> <span class="o">&lt;</span> <span class="n">T_final</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ComputeTempSpacings</span><span class="p">(</span><span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">Natoms</span><span class="p">,</span> <span class="n">Ndf</span><span class="p">,</span> <span class="n">kb</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">T2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">find_T2</span><span class="p">(</span><span class="n">target_prob</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+            <span class="n">T1s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T1</span><span class="p">)</span>
+            <span class="n">T2s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span>
+            <span class="n">delta_Ts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T2</span> <span class="o">-</span> <span class="n">T1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acceptance probability: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\t</span><span class="s2">T1: </span><span class="si">{</span><span class="n">T1</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K</span><span class="se">\t</span><span class="s2">T2: </span><span class="si">{</span><span class="n">T2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K</span><span class="se">\t</span><span class="s2">Delta T: </span><span class="si">{</span><span class="n">T2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">T1</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acceptance probability: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">prob</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\t</span><span class="s2">T1: </span><span class="si">{</span><span class="n">T1</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K</span><span class="se">\t</span><span class="s2">T2: </span><span class="si">{</span><span class="n">T2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K</span><span class="se">\t</span><span class="s2">Delta T: </span><span class="si">{</span><span class="n">T2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">T1</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">T1</span> <span class="o">=</span> <span class="n">T2</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Starting temperature spacing search...
+Acceptance probability: 0.25    T1: 50.00 K     T2: 51.32 K     Delta T: 1.32 K
+Acceptance probability: 0.25    T1: 51.32 K     T2: 52.67 K     Delta T: 1.35 K
+Acceptance probability: 0.25    T1: 52.67 K     T2: 54.05 K     Delta T: 1.39 K
+Acceptance probability: 0.25    T1: 54.05 K     T2: 55.48 K     Delta T: 1.42 K
+Acceptance probability: 0.25    T1: 55.48 K     T2: 56.94 K     Delta T: 1.46 K
+Acceptance probability: 0.25    T1: 56.94 K     T2: 58.44 K     Delta T: 1.50 K
+Acceptance probability: 0.25    T1: 58.44 K     T2: 59.98 K     Delta T: 1.54 K
+Acceptance probability: 0.25    T1: 59.98 K     T2: 61.56 K     Delta T: 1.58 K
+Acceptance probability: 0.25    T1: 61.56 K     T2: 63.18 K     Delta T: 1.62 K
+Acceptance probability: 0.25    T1: 63.18 K     T2: 64.84 K     Delta T: 1.66 K
+Acceptance probability: 0.25    T1: 64.84 K     T2: 66.55 K     Delta T: 1.71 K
+Acceptance probability: 0.25    T1: 66.55 K     T2: 68.30 K     Delta T: 1.75 K
+Acceptance probability: 0.25    T1: 68.30 K     T2: 70.10 K     Delta T: 1.80 K
+Acceptance probability: 0.25    T1: 70.10 K     T2: 71.94 K     Delta T: 1.85 K
+Acceptance probability: 0.25    T1: 71.94 K     T2: 73.84 K     Delta T: 1.89 K
+Acceptance probability: 0.25    T1: 73.84 K     T2: 75.78 K     Delta T: 1.94 K
+Acceptance probability: 0.25    T1: 75.78 K     T2: 77.78 K     Delta T: 2.00 K
+Acceptance probability: 0.25    T1: 77.78 K     T2: 79.83 K     Delta T: 2.05 K
+Acceptance probability: 0.25    T1: 79.83 K     T2: 81.93 K     Delta T: 2.10 K
+Acceptance probability: 0.25    T1: 81.93 K     T2: 84.09 K     Delta T: 2.16 K
+Acceptance probability: 0.25    T1: 84.09 K     T2: 86.30 K     Delta T: 2.21 K
+Acceptance probability: 0.25    T1: 86.30 K     T2: 88.57 K     Delta T: 2.27 K
+Acceptance probability: 0.25    T1: 88.57 K     T2: 90.90 K     Delta T: 2.33 K
+Acceptance probability: 0.25    T1: 90.90 K     T2: 93.30 K     Delta T: 2.39 K
+Acceptance probability: 0.25    T1: 93.30 K     T2: 95.75 K     Delta T: 2.46 K
+Acceptance probability: 0.25    T1: 95.75 K     T2: 98.28 K     Delta T: 2.52 K
+Acceptance probability: 0.25    T1: 98.28 K     T2: 100.86 K    Delta T: 2.59 K
+Acceptance probability: 0.25    T1: 100.86 K    T2: 103.52 K    Delta T: 2.66 K
+Acceptance probability: 0.25    T1: 103.52 K    T2: 106.25 K    Delta T: 2.73 K
+Acceptance probability: 0.25    T1: 106.25 K    T2: 109.04 K    Delta T: 2.80 K
+Acceptance probability: 0.25    T1: 109.04 K    T2: 111.91 K    Delta T: 2.87 K
+Acceptance probability: 0.25    T1: 111.91 K    T2: 114.86 K    Delta T: 2.95 K
+Acceptance probability: 0.25    T1: 114.86 K    T2: 117.89 K    Delta T: 3.02 K
+Acceptance probability: 0.25    T1: 117.89 K    T2: 120.99 K    Delta T: 3.10 K
+Acceptance probability: 0.25    T1: 120.99 K    T2: 124.18 K    Delta T: 3.19 K
+Acceptance probability: 0.25    T1: 124.18 K    T2: 127.45 K    Delta T: 3.27 K
+Acceptance probability: 0.25    T1: 127.45 K    T2: 130.80 K    Delta T: 3.36 K
+Acceptance probability: 0.25    T1: 130.80 K    T2: 134.25 K    Delta T: 3.44 K
+Acceptance probability: 0.25    T1: 134.25 K    T2: 137.78 K    Delta T: 3.53 K
+Acceptance probability: 0.25    T1: 137.78 K    T2: 141.41 K    Delta T: 3.63 K
+Acceptance probability: 0.25    T1: 141.41 K    T2: 145.13 K    Delta T: 3.72 K
+Acceptance probability: 0.25    T1: 145.13 K    T2: 148.95 K    Delta T: 3.82 K
+Acceptance probability: 0.25    T1: 148.95 K    T2: 152.87 K    Delta T: 3.92 K
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/tmp/ipykernel_15522/1430485309.py:31: RuntimeWarning: invalid value encountered in double_scalars
+  log_one = np.log(0.5) + np.log1p(erf(-mu_val / (np.sqrt(2) * sigma_val)))
+/tmp/ipykernel_15522/1430485309.py:33: RuntimeWarning: invalid value encountered in double_scalars
+  log_third = np.log1p(erf((mu_val + C_val * sigma_val**2) / np.sqrt(2 * sigma_val**2)))
+/tmp/ipykernel_15522/1430485309.py:35: RuntimeWarning: invalid value encountered in logaddexp
+  log_prob = np.logaddexp(log_one, log_second + log_third)
+/tmp/ipykernel_15522/1430485309.py:31: RuntimeWarning: divide by zero encountered in log1p
+  log_one = np.log(0.5) + np.log1p(erf(-mu_val / (np.sqrt(2) * sigma_val)))
+/tmp/ipykernel_15522/1430485309.py:33: RuntimeWarning: divide by zero encountered in log1p
+  log_third = np.log1p(erf((mu_val + C_val * sigma_val**2) / np.sqrt(2 * sigma_val**2)))
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">T2s</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(43,)
+</pre></div></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generated/lumache.html" class="btn btn-neutral float-left" title="lumache" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="farthest_point_sampling.html" class="btn btn-neutral float-right" title="Farthest Point Sampling (FPS)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, SabIA Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
