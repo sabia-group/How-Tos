@@ -341,13 +341,11 @@ class NormalModeSampling:
             temperature: temperature in Kelvin for the thermal sampling
 
             sampling_mode: 'classical' or 'quantum'; select whether effective quantum temperatures
-
             should be calculated for each mode
 
             mep_density: linear density of points per unit length (a0) along the MEP
 
             match_density_at_minimum: if True, the density of points at the minimum is matched 
-
             with the MEP density without the need to specify `n_points_min`
 
             n_points_min: number of points to sample at the minimum
