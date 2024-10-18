@@ -31,6 +31,7 @@ How To ...
    gle
    units
    thermostats
+   pimd-files/how-to-rmpd-trpmd-cmd.rst 
 
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
