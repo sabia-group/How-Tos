@@ -31,6 +31,7 @@ How To ...
    gle
    units
    thermostats
-
+   farthest_point_sampling
+   remd_coefficient_search
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
