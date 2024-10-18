@@ -92,7 +92,7 @@ Code documentation
    :members: NormalModes, NormalModeSampling
 
 References
-==========
+**********
 
 .. [1] Schran C., Brezina K., Marsalek O. *Committee neural network potentials control generalization errors and enable active learning*. J. Chem. Phys. 153(10), 104105, **2020**
 .. [2] Brezina K., Beck H. Marsalek O. *Reducing the cost of neural network potential generation for reactive molecular systems* J. Chem. Theory Comput. 19(19), 6589-6604, **2023**
