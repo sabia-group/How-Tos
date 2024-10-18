@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*-coding:utf-8 -*-
 '''
-Some analytical results for a harmonic oscillator attahced to a generalised Langevin equation (GLE) thermostat. Written by George Trenins and Hannah Bertschi.
+Contributed by George Trenins and Hannah Bertschi.
 '''
 
 
@@ -16,7 +16,7 @@ def wnle_cqq(
         omega: float,
         tau: float,
         m: Optional[float] = 1):
-    """Position auto-correlation function for a harmonic oscillator at thermal equilibrium, under the action of a white-noise Langevin equation thermostat (WNLE).
+    r"""Position auto-correlation function for a harmonic oscillator at thermal equilibrium, under the action of a white-noise Langevin equation thermostat (WNLE).
 
     :param t: time(s) for which to compute the covariance matrix
     :type t: numpy.ndarray
@@ -137,7 +137,7 @@ def gle_cxx(
 def check_matrix(
         M : Union[float, np.ndarray],
         name : str) -> None:
-    """
+    r"""
     Check if matrix M is 2-dimensional and square. If it fails a check raise a
     RuntimeError.
 
@@ -154,7 +154,7 @@ def check_matrix(
 def get_Aqp(
         Ap : Union[float, np.ndarray], 
         omega : float) -> np.ndarray:
-    """
+    r"""
     :param Ap: momentum + auxiliary variable block of the drift matrix, `shape(n, n)`
     :type Ap: numpy.ndarray
     :param omega: harmonic oscillator frequency 
@@ -193,7 +193,7 @@ def get_Cqp_canonical(
 def get_Dqp(
         Ap : Union[float, np.ndarray], 
         Cp : Union[float, np.ndarray]) -> np.ndarray:
-    """
+    r"""
     :param Ap: the momentum + auxiliary variable block of the drift matrix, `shape(n, n)`.
     :type Ap: numpy.ndarray
     :param Cp: the corresponding :math:`\mathbf{C}_p` matrix
@@ -212,7 +212,7 @@ def get_Dqp(
 def get_Cqp(
         Aqp : Union[float, np.ndarray], 
         Dqp : Union[float, np.ndarray]) -> np.ndarray:
-    """
+    r"""
     Compute the stationary covariance matrix for mass-weighted variables that solves
 
     .. math::

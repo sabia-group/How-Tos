@@ -1,6 +1,8 @@
 Dissipative Baths
 =================
 
+Contributed by George Trenins and Paolo Lazzaroni.
+
 Basics
 ------
 
@@ -37,4 +39,11 @@ Bath discretization
         :class-doc-from: init
         :show-inheritance:
 
+    .. autoclass:: tools.baths.Debye
+        :class-doc-from: init
+        :show-inheritance:
+
+    .. autoclass:: tools.baths.Splined
+        :class-doc-from: init
+        :show-inheritance:
 

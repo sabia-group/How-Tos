@@ -7,7 +7,7 @@ Spectral densities, memory-friction kernels, harmonic discretisation schemes.
 
 from __future__ import print_function, division, absolute_import
 import numpy as np
-from typing import Union
+from typing import Union, Optional
 
 
 class BaseSpectralDensity(object):
@@ -65,7 +65,7 @@ class BaseSpectralDensity(object):
         return (np.pi/2) * np.sum(self.c**2/(self.bath_mass*self._frequencies) * f, axis=-1)
     
     def l_quadrature(self, f):
-        """Same as `quadrature` but using :math:`\Lambda(\omega) = J(\omega)/\omega` as the integration kernel.
+        r"""Same as `quadrature` but using :math:`\Lambda(\omega) = J(\omega)/\omega` as the integration kernel.
         """
 
         return (np.pi/2) * np.sum(self.c**2/(self.bath_mass*self._frequencies**2) * f, axis=-1)
@@ -74,7 +74,7 @@ class BaseSpectralDensity(object):
         raise NotImplementedError
     
     def reorganisation_energy(self):
-        return (4/np.pi) * self.quadrature(1/self._frequencies)
+        return (4/np.pi) * self.l_quadrature(1.0)
     
     def J(self, omega: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
         """Spectral density at frequency `omega`.
@@ -101,7 +101,7 @@ class ExpOhmic(BaseSpectralDensity):
                  eta: float, 
                  omega_cut: float, 
                  *args, **kwargs) -> None:
-        """Exponentially damped Ohmic spectral density
+        r"""Exponentially damped Ohmic spectral density
 
         .. math::
             J(\omega) = \eta \omega \exp(-\omega/\omega_c)
@@ -139,3 +139,121 @@ class ExpOhmic(BaseSpectralDensity):
     def exact_reorganisation(self) -> float:
         return (4/np.pi) * self.eta * self.omega_cut
 
+
+class Debye(BaseSpectralDensity):
+
+    def __init__(self, 
+                 mass: float,
+                 Nmodes: int,
+                 eta: float, 
+                 omega_cut: float, 
+                 *args, **kwargs) -> None:
+        r"""Debye spectral density
+
+        .. math::
+            J(\omega) = \frac{\eta \omega \omega_c^2 }{\omega^2 + \omega_c^2}
+
+        with discrete frequencies calculated according to https://doi.org/10.1002/jcc.24527
+
+        :param mass: mass of the bath modes
+        :type mass: float
+        :param Nmodes: number of oscillators in the harmonic bath discretisation
+        :type Nmodes: int
+        :param eta: static friction coefficient
+        :type eta: float
+        :param omega_cut: cut-off frequency
+        :type omega_cut: float
+        """
+        self.eta = eta
+        self.omega_cut = omega_cut
+        super().__init__(mass, Nmodes, *args, **kwargs)
+
+    def J(self, omega: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        return self.eta * self.omega_cut**2 * omega / (
+            omega**2 + self.omega_cut**2
+        )
+    
+    def Lambda(self, omega: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        return self.eta * self.omega_cut**2 / (
+            omega**2 + self.omega_cut**2
+        )
+    
+    def K(self, t: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        return self.eta * self.omega_cut * np.exp(-self.omega_cut*np.abs(t))
+    
+    def quadpoints(self) -> np.ndarray:
+        return self.omega_cut * np.tan(
+            np.pi * (2*np.arange(1, self.Nmodes+1) - 1) / (4*self.Nmodes)
+        )
+    
+    def exact_reorganisation(self) -> float:
+        return 2 * self.eta * self.omega_cut
+
+class Splined(BaseSpectralDensity):
+
+    def __init__(self, 
+                 mass: float,
+                 Nmodes: int,
+                 omega: np.ndarray,
+                 Lambda: np.ndarray,
+                 eta: Optional[float] = 1.0,  
+                 *args, **kwargs) -> None:
+        r"""Discretization of a numerical spectral density calculated on a grid and interpolated with cubic splines. Discretisation is implemented as described in https://doi.org/10.1002/jcc.24527
+
+        :param mass: mass of the bath modes
+        :type mass: float
+        :param Nmodes: number of oscillators in the harmonic bath discretisation
+        :type Nmodes: int
+        :param omega: grid of frequencies
+        :type omega: numpy.ndarray
+        :param Lambda: spectral density divided by frequency, computed at `omega`
+        :type Lambda: numpy.ndarray
+        :param eta: scaling of the spectral density
+        :type eta: float, optional
+        :param \**kwargs: optional arguments passed on to `scipy.interpolate.CubicSpline`
+        """
+        from scipy.interpolate import CubicSpline
+        self.eta = eta # scaling of the spectral density
+        self.omega_grid = np.asarray(omega)
+        self.Lambda_grid = np.asarray(Lambda)
+        self.wmax = np.max(self.omega_grid)
+        self._cs = CubicSpline(
+            self.omega_grid, 
+            self.eta*self.Lambda_grid,
+            axis = kwargs.pop('axis', 0),
+            bc_type = kwargs.pop('bc_type', 'not-a-knot'),
+            extrapolate = kwargs.pop('extrapolate', None))
+        self._integral = self._cs.antiderivative()
+        self._reorganization_lambda = (4/np.pi)*(self._integral(self.wmax) - self._integral(0.0))
+        super().__init__(mass, Nmodes, *args, **kwargs)
+            
+    def Lambda(self, omega):
+        y = np.abs(omega)
+        return np.where(y > self.wmax, 0.0, self._cs(omega))
+    
+    def J(self, omega):
+        return np.abs(omega) * self.Lambda(omega)
+    
+    def K(self, t):
+        t = np.atleast_1d(t)[...,None]
+        f = np.cos(t*self.frequencies)
+        return 2/np.pi * np.squeeze( self.l_quadrature(f) )
+        
+    def quadpoints(self):
+        from scipy.optimize import root_scalar, RootResults
+        freqs = []
+        prev = 0.0
+        I0 = self._integral(0)
+        for j in range(self.Nmodes):
+            RHS = I0 + (j+1/2)/self.Nmodes * (np.pi*self.exact_reorganisation()/4)
+            fun = lambda x: self._integral(x) - RHS
+            ans: RootResults = root_scalar(
+                fun, method="bisect", bracket=[prev, self.wmax])
+            if not ans.converged:
+                raise RuntimeError(f"Failed to find discrete frequency number {j+1}")
+            freqs.append(ans.root)
+            prev = ans.root
+        return np.asarray(freqs)
+        
+    def exact_reorganisation(self):
+        return self._reorganization_lambda
