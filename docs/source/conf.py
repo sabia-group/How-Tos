@@ -1,5 +1,9 @@
 # Configuration file for the Sphinx documentation builder.
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../'))
+
 # -- Project information
 
 project = 'SabIA-How-To'
@@ -21,6 +25,9 @@ extensions = [
     'sphinx.ext.viewcode',  # This allows linking or embedding source code
     'sphinx_copybutton' # pip install sphinx-copybutton
 ]
+
+# testing web code rendering
+autosummary_generate = True
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
