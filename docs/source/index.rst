@@ -12,7 +12,7 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 2
 
    tts
    remote_dev
-   :maxdepth: 2
