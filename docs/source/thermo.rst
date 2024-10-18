@@ -1,5 +1,7 @@
+############
 Fluctuations
-=====
+############
+
 
 During a molecular dynamics simulation one generally focuses on three main ensembles, namely 
 the :math:`NVT`, :math:`NPT` and :math:`NVE` ensembles.
@@ -7,54 +9,39 @@ the :math:`NVT`, :math:`NPT` and :math:`NVE` ensembles.
 In the case of :math:`NVT` one introduces a thermostat to **equilibrate** the temperaturexi, whereas in :math:`NPT` a barostat is also
 used. Various methods for introducing both a thermostat as well as a barostat have been introduced.  
 
-It is important to point out, however, that the target temperature and/or pressure 
+It is important to point out, however, that the target temperature and/or pressure are only constant **on average**, and throughout a simulation
+it will oscilate.  
 
-.. _Ideal Gas:
 
-Let us consider an ideal gas consisting of :math:`N` particles, then 
+.. _Pressure fluctuations:
 
-:math:`PV = Nk_B T`.
+Pressure fluctuations
+#####################
 
-From a classical point of view, if the Hamiltonian is quadratic with :math:`\nu` degress of freedom
+The pressure fluctuaions can be calculated from
 
-:math:`E = \frac{\nu}{2}k_B T`
+:math:`\sigma_P^2 = -k_B T \left(\frac{\partial P}{\partial V}\right)_S = \frac{k_B T}{\kappa_S V}`
 
-We emmidiately get that
+where :math:`\kappa_S` is the isentropic compressibility, which can be obtained by
 
-:math:`E = \frac{2}{3} PV`
+:math:`\kappa_S = \frac{1}{\rho c^2}` 
 
-.. _note :: 
+where :math:`\rho` is the density, and :math:`c` is the speed of sound in the material.
 
-The proportionality relation is, in fact, more general, and can be applied to poliatomic systems as well.
+From this we obtain that
 
-.. _installation:
+:math:`\sigma_P = \sqrt{\frac{\rho c^2 k_B T}{V}}`
 
-Installation
-------------
 
-To use Lumache, first install it using pip:
+Estimates
+*********
 
-.. code-block:: console
+Let's take a box of water with volume :math:`V = 20  ~  nm^3` (512 water molecules) at :math:`T = 300 K` and  density :math:`\rho = 1 ~ g/cm^2`. Under these 
+conditions the speed of sound is :math:`1500 ~ m/s`
 
-   (.venv) $ pip install lumache
+Thus we expect :math:`\sigma_P \sim 25 ~ MPa = 250 ~ bar`
+`
 
-Creating recipes
-----------------
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
 
-.. autofunction:: lumache.get_random_ingredients
-
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
-
-.. autoexception:: lumache.InvalidKindError
-
-For example:
-
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
 
