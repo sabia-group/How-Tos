@@ -17,6 +17,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',  # This allows linking or embedding source code
+    'sphinx_copybutton' # pip install sphinx-copybutton
 ]
 
 intersphinx_mapping = {
