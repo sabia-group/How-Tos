@@ -1,24 +1,39 @@
 Welcome to the SabIA Group How-To Examples
-===================================
+==========================================
 
-This is a nice reStructuredText template. Let us start building this up.
-Examples on how to write this can be found in this `rst primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_
+In this webpage, you will find a collection of "How-To" explanations compiled
+by the SabIA group from 2024 onwards. We hope this is useful!
 
-Links are like this: `Open Food Facts database <https://world.openfoodfacts.org/>`_
-Highlighting text is *simple* and *intuitive* and **so on**.
+The Simulations from Ab Initio Approaches (SabIA) group is hosted at the
+MPI for the Structure and Dynamics of Matter in Hamburg, Germany. Check
+out our webpage too, under `this link`_.
 
-These are links :doc:`usage` and :ref:`installation`.
+Contributions come from all members of the group.
 
 .. note::
 
    This project is under active development.
 
-Contents
---------
+How To ...
+----------
 
 .. toctree::
+   :maxdepth: 2
 
-   usage
-   api
    remd_coefficient_search
    farthest_point_sampling
+   eh_dynamics
+   abs_spectrum
+   tts
+   remote_dev
+   normal-modes/normal-modes
+   time-correlation/time-correlation
+   ase-calculator/ase-calculator
+   sysbath
+   gle
+   units
+   thermostats
+
+
+.. _this link: https://www.mpsd.mpg.de/research/groups/sabia
+>>>>>>> main

@@ -19,6 +19,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'nbsphinx',
+    'sphinx_copybutton' # pip install sphinx-copybutton
 ]
 
 intersphinx_mapping = {
