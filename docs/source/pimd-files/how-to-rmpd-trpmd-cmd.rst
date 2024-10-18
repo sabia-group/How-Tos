@@ -209,7 +209,7 @@ In the :code:`<system>` part of the input, add:
    </normal_modes>
 
 Note that the adiabatic separation is a convergence parameter in these simulations. For systems with
-physical vibrational frequencies up to 3500 cm :sup:`-1`, numbers between 13000 and 24000 cm :sup:`-1`
+physical vibrational frequencies up to 3500 cm\ :sup:`-1`, numbers between 13000 and 24000 cm\ :sup:`-1`
 can be tested. For systems with lower vibrational frequencies, this parameter can be lower.
 
 The thermostat and time step block is also quite important. This is how it normally looks like:
@@ -225,14 +225,12 @@ The thermostat and time step block is also quite important. This is how it norma
           </thermostat>
         </dynamics>
     </motion>
-
+   
 Note the smaller time step because of the adiabatic separation parameter, and the :code:`pile_lambda` value that ensures
 an underdamped regime for the Langevin thermostats attached to the internal modes of the ring polymer. This is important
 to remove spurious effects from the Langevin thermostats attached to the internal modes. For theory check [`JCP20052`_]
 and [`JCP20142`_].
 
-Partially-adiabatic Elevated-T CMD
-==================================
 
 .. _this MOOC link: https://courseware.epfl.ch/courses/course-v1:EPFL+X+2022/about
 .. _i-PI code: https://ipi-code.org/
