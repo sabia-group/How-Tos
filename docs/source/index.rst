@@ -19,10 +19,13 @@ These are links :doc:`usage` and :ref:`installation`.
 Contents
 --------
 
-.. toctree:: :maxdepth: 1
+.. toctree:: 
+   
+   :maxdepth: 2
 
    usage
    api
    normal-modes/normal-modes
    time-correlation/time-correlation
    ase-calculator/ase-calculator
+   remote_dev
