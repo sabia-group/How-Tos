@@ -23,13 +23,10 @@ Contents
    
    :maxdepth: 2
 
-   usage
-   api
+   tts
+   remote_dev
    normal-modes/normal-modes
    time-correlation/time-correlation
    ase-calculator/ase-calculator
-.. toctree::
-   :maxdepth: 2
 
-   tts
-   remote_dev
+   
