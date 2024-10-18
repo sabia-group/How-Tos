@@ -4,3 +4,6 @@ sphinx-autobuild
 sphinx-copybutton
 nbsphinx
 nbconvert
+numpy
+scipy
+sympy
