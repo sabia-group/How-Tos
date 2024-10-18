@@ -48,7 +48,13 @@ class BaseSpectralDensity(object):
         return c, w, m
     
     def quadrature(self, f):
-        """Calculate the quadrature approximation to the integral Integrate[ J(ω) f(ω), {ω, 0, ∞}], where J(ω) is the spectral density.
+        r"""Calculate the quadrature approximation to the integral
+
+        .. math::
+            \int_0^{\infty} J(\omega) f(\omega) \, \mathrm{d}\omega \approx 
+            \frac{\pi}{2} \sum_{n=1}^{N_{\text{bath}}}  \frac{c_n^2}{m \omega_n} f(\omega_n)
+          
+        where :math:`J(\omega)` is the spectral density.
 
         :param f: input function evaluated at the quadrature points (`self.frequencies`).
         :f type: numpy.ndarray
@@ -59,7 +65,7 @@ class BaseSpectralDensity(object):
         return (np.pi/2) * np.sum(self.c**2/(self.bath_mass*self._frequencies) * f, axis=-1)
     
     def l_quadrature(self, f):
-        """Same as `quadrature` but using Λ = J/ω as the integration kernel.
+        """Same as `quadrature` but using :math:`\Lambda(\omega) = J(\omega)/\omega` as the integration kernel.
         """
 
         return (np.pi/2) * np.sum(self.c**2/(self.bath_mass*self._frequencies**2) * f, axis=-1)
@@ -71,17 +77,17 @@ class BaseSpectralDensity(object):
         return (4/np.pi) * self.quadrature(1/self._frequencies)
     
     def J(self, omega: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-        """Spectral density at frequency omega.
+        """Spectral density at frequency `omega`.
         """
         raise NotImplementedError
     
     def Lambda(self, omega: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-        """Spectral density at frequency omega, divided by omega.
+        """Spectral density at frequency `omega`, divided by `omega`.
         """
         raise NotImplementedError
     
     def K(self, t: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-        """Memory-friction kernel at time t.
+        """Memory-friction kernel at time `t`.
         """
         raise NotImplementedError
     
