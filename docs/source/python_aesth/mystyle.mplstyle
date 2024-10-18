@@ -1,0 +1,22 @@
+# Font settings
+# Figure and axes settings
+axes.linewidth: 8
+xtick.major.size: 10
+ytick.major.size: 10
+xtick.major.width: 2
+ytick.major.width: 2
+xtick.direction: in
+ytick.direction: in
+font.size: 30
+axes.labelsize: 35
+axes.titlesize: 35
+lines.linewidth: 2
+font.family: Liberation Sans
+mathtext.fontset: custom
+mathtext.it: STIXGeneral:italic
+mathtext.bf: STIXGeneral:italic:bold
+figure.figsize: 12, 10
+legend.framealpha: 1
+legend.fancybox: False
+
+

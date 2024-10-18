@@ -1,0 +1,145 @@
+# General Settings
+# These parameters define the overall behavior of Matplotlib and its backend.
+_internal.classic_mode: False  # Use the modern style
+backend: QtAgg  # Rendering backend
+backend_fallback: True  # Fallback to alternate backend
+timezone: UTC  # Timezone for date plots
+interactive: False  # Disable interactive mode
+toolbar: toolbar2  # Use the second version of the toolbar
+
+# Animation Settings
+# Control animation-related parameters.
+animation.bitrate: -1  # Default animation bitrate
+animation.codec: h264  # Codec for animations
+animation.convert_args: []  # Arguments for external converters
+animation.convert_path: convert  # Path to conversion tool
+animation.embed_limit: 20.0  # Maximum size for embedding animations
+animation.ffmpeg_args: []  # Arguments for FFmpeg
+animation.ffmpeg_path: ffmpeg  # Path to FFmpeg
+animation.frame_format: png  # Format for animation frames
+animation.html: none  # How to display animations in HTML
+animation.writer: ffmpeg  # Writer for saving animations
+
+# Axes Settings
+# Define how axes appear and behave in plots.
+axes.autolimit_mode: data  # Auto-scaling mode for axis limits
+axes.axisbelow: line  # Draw axes below data lines
+axes.edgecolor: black  # Color of axes edges
+axes.facecolor: white  # Background color of the axes
+axes.formatter.limits: [-5, 6]  # Limits for scientific notation
+axes.formatter.min_exponent: 0  # Minimum exponent for scientific notation
+axes.formatter.offset_threshold: 4  # Threshold to use offset
+axes.formatter.use_locale: False  # Use locale settings for number formatting
+axes.formatter.use_mathtext: False  # Use math text for labels
+axes.formatter.useoffset: True  # Enable offset for ticks
+axes.grid: False  # Disable grid by default
+axes.grid.axis: both  # Show grid on both axes if enabled
+axes.grid.which: major  # Show grid lines on major ticks
+axes.labelcolor: black  # Label color
+axes.labelpad: 4.0  # Padding for axes labels
+axes.labelsize: medium  # Font size for axis labels
+axes.labelweight: normal  # Font weight for axis labels
+axes.linewidth: 0.8  # Line width of axes
+axes.prop_cycle: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'])  # Color cycle for plots
+axes.spines.bottom: True  # Show bottom spine
+axes.spines.left: True  # Show left spine
+axes.spines.right: True  # Show right spine
+axes.spines.top: True  # Show top spine
+axes.titlecolor: auto  # Color of the title
+axes.titlelocation: center  # Title location (centered)
+axes.titlepad: 6.0  # Padding around title
+axes.titlesize: large  # Title font size
+axes.titleweight: normal  # Title font weight
+axes.titley: None  # Y position of title
+axes.unicode_minus: True  # Use Unicode minus sign
+axes.xmargin: 0.05  # X-axis margin
+axes.ymargin: 0.05  # Y-axis margin
+axes.zmargin: 0.05  # Z-axis margin for 3D plots
+axes3d.grid: True  # Grid for 3D plots
+
+# Boxplot Settings
+# Define how boxplots are displayed.
+boxplot.bootstrap: None  # Bootstrap iterations for notched plots
+boxplot.boxprops.color: black  # Color of box edges
+boxplot.boxprops.linestyle: -  # Line style for boxes
+boxplot.boxprops.linewidth: 1.0  # Line width for boxes
+boxplot.capprops.color: black  # Color of caps
+boxplot.capprops.linewidth: 1.0  # Line width of caps
+boxplot.flierprops.color: black  # Color of fliers
+boxplot.flierprops.linewidth: 1.0  # Line width of fliers
+boxplot.flierprops.marker: o  # Marker style for fliers
+boxplot.flierprops.markerfacecolor: none  # Face color of flier markers
+boxplot.flierprops.markersize: 6.0  # Size of flier markers
+boxplot.flierprops.linestyle: none  # Line style for flier markers
+boxplot.meanline: False  # Show mean line instead of mean point
+boxplot.meanprops.color: C2  # Color of mean marker
+boxplot.meanprops.marker: ^  # Marker style for mean
+boxplot.meanprops.markerfacecolor: C2  # Face color for mean marker
+boxplot.meanprops.markersize: 6.0  # Size of mean marker
+boxplot.meanprops.linestyle: --  # Line style for mean line
+boxplot.meanprops.linewidth: 1.0  # Line width of mean line
+boxplot.medianprops.color: C1  # Color of median line
+boxplot.medianprops.linewidth: 1.0  # Line width of median line
+boxplot.notch: False  # Display notch around median
+boxplot.patchartist: False  # Patch artist boxplots
+boxplot.showbox: True  # Display the box
+boxplot.showcaps: True  # Display the caps
+boxplot.showfliers: True  # Display fliers
+boxplot.showmeans: False  # Display mean
+boxplot.vertical: True  # Vertical orientation
+boxplot.whiskerprops.color: black  # Color of whiskers
+boxplot.whiskerprops.linewidth: 1.0  # Line width of whiskers
+boxplot.whiskers: 1.5  # Whisker length
+
+# Contour Settings
+# Define properties for contour plots.
+contour.corner_mask: True  # Mask corners in contour plots
+contour.linewidth: None  # Line width for contour lines
+contour.negative_linestyle: dashed  # Line style for negative contours
+
+# Date/Time Settings
+# Handles how dates and times are formatted in plots.
+date.autoformatter.day: %Y-%m-%d  # Format for days
+date.autoformatter.hour: %m-%d %H  # Format for hours
+date.autoformatter.minute: %d %H:%M  # Format for minutes
+date.autoformatter.month: %Y-%m  # Format for months
+date.autoformatter.second: %H:%M:%S  # Format for seconds
+date.autoformatter.year: %Y  # Format for years
+date.converter: auto  # Automatic date conversion
+date.epoch: 1970-01-01T00:00:00  # Date epoch
+date.interval_multiples: True  # Use interval multiples for date axes
+
+# Errorbar Settings
+# Control error bar appearance in plots.
+errorbar.capsize: 0.0  # Size of error bar caps
+
+# Figure Settings
+# Control overall figure settings.
+figure.autolayout: False  # Disable auto layout
+figure.constrained_layout.use: False  # Disable constrained layout
+figure.dpi: 100  # DPI for the figure
+figure.edgecolor: white  # Color of figure edges
+figure.facecolor: white  # Background color of the figure
+figure.figsize: [6.4, 4.8]  # Default figure size in inches
+figure.frameon: True  # Draw a frame around the figure
+figure.max_open_warning: 20  # Maximum number of open figures before a warning
+figure.raise_window: True  # Raise the window when figure is shown
+figure.subplot.bottom: 0.11  # Bottom margin for subplots
+figure.subplot.hspace: 0.2  # Height spacing between subplots
+figure.subplot.left: 0.125  # Left margin for subplots
+figure.subplot.right: 0.9  # Right margin for subplots
+figure.subplot.top: 0.88  # Top margin for subplots
+figure.subplot.wspace: 0.2  # Width spacing between subplots
+figure.titlesize: large  # Font size for figure titles
+figure.titleweight: normal  # Font weight for figure titles
+
+# Font Settings
+# Control the default fonts used in plots.
+font.family: ['sans-serif']  # Default font family
+font.size: 10.0  # Default font size
+font.weight: normal  # Default font weight
+font.cursive: ['Apple Chancery', 'Textile', 'Zapf Chancery', 'Sand', 'Script MT', 'Felipa', 'Comic Neue', 'Comic Sans MS', 'cursive']  # List of cursive fonts
+font.fantasy: ['Chicago', 'Charcoal', 'Impact', 'Western', 'Humor Sans', 'xkcd', 'fantasy']  # List of fantasy fonts
+font.monospace: ['DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', 'monospace']  # List of monospace fonts
+font.sans-serif: ['DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif
+
