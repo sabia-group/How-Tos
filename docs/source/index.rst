@@ -11,9 +11,11 @@ by the SabIA group from 2024 onwards. We hope this is useful!
 Contents
 --------
 
-.. toctree:: 
+.. toctree::
    :maxdepth: 2
 
+   eh_dynamics
+   abs_spectrum
    tts
    remote_dev
    normal-modes/normal-modes
