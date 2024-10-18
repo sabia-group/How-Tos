@@ -8,8 +8,8 @@ by the SabIA group from 2024 onwards. We hope this is useful!
 
    This project is under active development.
 
-Contents
---------
+How To ...
+----------
 
 .. toctree::
    :maxdepth: 2
