@@ -211,6 +211,7 @@ So don't close this shell, or you'll lose the allocated resources
 Use the following bash script to start a Jupyter server on the allocated node:
 
 .. code-block:: shell
+
     # switch to conda env and activate modules, I like to put them in a shell script
     source ~/.env.ipi_mace.sh  # NOTE: replace with your own script!!!
 
@@ -283,11 +284,10 @@ You can check the task status by:
 .. code-block:: shell
 
     zklou@ada02:~> sacct -j 254308
-    JobID           JobName  Partition    Account  AllocCPUS      State ExitCode 
-    ------------ ---------- ---------- ---------- ---------- ---------- -------- 
-    254308       alloc1node      p.ada       mpsd        144    RUNNING      0:0 
-    254308.exte+     extern                  mpsd        144    RUNNING      0:0 
-    254308.0        jupyter                  mpsd         36    RUNNING      0:0 
+    JobID           JobName  Partition    Account  AllocCPUS      State ExitCode
+    ------------ ---------- ---------- ---------- ---------- ---------- --------
+    254308       alloc1node      p.ada       mpsd        144    RUNNING      0:0
+    254308.exte+     extern                  mpsd        144    RUNNING      0:0
+    254308.0        jupyter                  mpsd         36    RUNNING      0:0
 
 If you want to stop the Jupyter server, run :code:`scancel 254308.0` to cancel **this step**, but **not** the entire :code:`salloc` job.
-
