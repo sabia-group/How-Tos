@@ -20,3 +20,5 @@ Contents
 
    usage
    api
+   remd_coefficient_search
+   farthest_point_sampling
