@@ -1,6 +1,8 @@
 Transition tube sampling
 ########################
 
+Contributed by Krystof Brezina on Oct 18, 2024.
+
 How to use TTS
 **************
 
@@ -53,9 +55,9 @@ This encourages using local modes "locally"; summing up over these distributions
 Now, each of the reference geometries is displaced perpendicularly from the path using its assigned control normal modes
 
 .. math::
-    \mathbf{R} = \mathbf{R}_0 + \sum_{i=1}^{N_\mathrm{vib}} \Omega_c \mathbb{\Omega}_c,
+    \mathbf{R} = \mathbf{R}_0 + \mathcal{M}^{-\frac{1}{2}}\sum_{i=1}^{N_\mathrm{vib}} \Omega_{i,c} \mathbb{\Omega}_{i,c},
 
-where the values of normal coordinates :math:`\Omega_c` are sampled from the harmonic Boltzmann distribution
+where :math:`\mathcal{M}` is the diagonal mass matrix and the values of normal coordinates :math:`\Omega_{i,c}` are sampled from the harmonic Boltzmann distribution
 
 .. math::
     p(\Omega_{1,c}, \dots, \Omega_{N_\mathrm{vib},c})
@@ -84,7 +86,7 @@ In the case of TTS beyond a single minimum, the obtained ensemble of structures 
 No expectation values should be calculated over it, its purpose is only auxiliary to provide training structures for NNP generation.
 
 Code documentation
-==================
+******************
 
 .. automodule:: tts.transition_tube_sampling
    :members: NormalModes, NormalModeSampling
@@ -92,5 +94,5 @@ Code documentation
 References
 ==========
 
-.. [1] Schran C., Brezina K., Marsalek O. *Committee neural network potentials contorl generalization errors and enable active learning*. J. Chem. Phys. 153(10), 104105, **2020**
+.. [1] Schran C., Brezina K., Marsalek O. *Committee neural network potentials control generalization errors and enable active learning*. J. Chem. Phys. 153(10), 104105, **2020**
 .. [2] Brezina K., Beck H. Marsalek O. *Reducing the cost of neural network potential generation for reactive molecular systems* J. Chem. Theory Comput. 19(19), 6589-6604, **2023**

@@ -92,9 +92,13 @@ class NormalModes:
 
         Arguments:
             symmetrize: activate symmetrization of the Hessian
+
             order_SP: expected saddle point order, number of finite imaginary frequencies at the configuration
+
             discard_imag_freq: discard unstable modes when `order_SP` > 0
+
             eps_freq: numerical threshold to check frequencies in a.u., 5e-4 ~ 100 cm^-1.
+
             n_TR: how many modes to filter to remove rotations and translations
         """
 
@@ -272,14 +276,18 @@ class NormalModeSampling:
     The weight of the sampling is uniform along the MEP between the endpoints.
     Perpendicular to the MEP and beyong the endpoints, the weighting is thermal, based on either
     classical or quantum thermal probability densities.
+
+    Written by Krystof Brezina in the group of Ondrej Marsalek at the Charles University in Prague, 2023.
+    If you use this code, please cite Brezina K. et al. JCTC, 19(19), 6589-6604, 2023.
     """
 
     def __init__(self, positions: np.ndarray, normal_modes: dict):
         """
         Arguments:
             positions: Atomic positions of all images in atomic units (Bohr radii)
+
             normal_modes: Dictionary of `NormalModes` objects with keys being
-                the relevant indices of images that the normal modes correspond to
+            the relevant indices of images that the normal modes correspond to
         """
 
         # store the positions and normal modes
@@ -331,18 +339,27 @@ class NormalModeSampling:
 
         Arguments:
             temperature: temperature in Kelvin for the thermal sampling
+
             sampling_mode: 'classical' or 'quantum'; select whether effective quantum temperatures
-                should be calculated for each mode
+
+            should be calculated for each mode
+
             mep_density: linear density of points per unit length (a0) along the MEP
+
             match_density_at_minimum: if True, the density of points at the minimum is matched 
-                with the MEP density without the need to specify `n_points_min`
+
+            with the MEP density without the need to specify `n_points_min`
+
             n_points_min: number of points to sample at the minimum
 
         Returns:
             A dictionary of:
-                xis: values of xi on the MEP from which the samples originate
-                distortions: generated thermal distortions, array of shape (number of distortions, number of atoms, 3)
-                labels: integer labels which denote the origin of each distortion, array of shape (number of distortions)
+
+            xis: values of xi on the MEP from which the samples originate
+
+            distortions: generated thermal distortions, array of shape (number of distortions, number of atoms, 3)
+
+            labels: integer labels which denote the origin of each distortion, array of shape (number of distortions)
         """
         # check that (only) one of `n_points_min` and `match_density_at_minimum` is specified
         if match_density_at_minimum is False and n_points_min is None:
