@@ -3,6 +3,8 @@
 Linear absorption spectra
 #########################
 
+Contributed by Hannah Bertschi
+
 This tutorial explains how to compute (electronic) linear absorption spectra from the time-dependent dipole moment :math:`\mu (t)`. It is assumed here that :math:`\mu (t)` has already been calculated in case where a short pulse is applied in the beginnig. (I might do a tutorial on how to do Ehrenfest dynamics with a pulse in FHI-aims as well, if I have the time.)
 
 ******

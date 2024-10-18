@@ -3,6 +3,8 @@
 Ehrenfest dynamics in FHI-aims
 ##############################
 
+Contributed by Hannah Bertschi
+
 The aim here is to show how to set up an input file in order to run real-time time-dependent density functional theory (RT-TDDFT) calculations together with Ehrenfest dynamics in FHI-aims. This is shown here when an external electric field is applied. The output of the dipole moment could be used to calculate an absorption spectrum, as is shown in this tutorial :ref:`abs-spectrum`. As an example we will look here at the benzene moleucle.
 
 *******************************
