@@ -34,6 +34,6 @@ How To ...
    pimd-files/how-to-rmpd-trpmd-cmd.rst 
    farthest_point_sampling
    remd_coefficient_search
-
+   2dcorr
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
