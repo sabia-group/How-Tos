@@ -70,24 +70,13 @@ Once you've installed :code:`VS Code`, you can install the `Remote Development e
 
 Now you're ready for easy remote development: click on *Remote Explorer* view (the monitor icon on the side), switch to :code:`Remotes (Tunnle/SSH)` in the top bar, and you should see all the SSH :code:`HostName` entries you have in your SSH config file.
 But before you click *Connect in New Window*, you probably don't want to type your password and OTP every time, right?
-I'd recommend logging in to the target remote machine through a local terminal first, and the :code:`ControlMaster`` settings will keep that connection alive.
+I'd recommend logging in to the target remote machine through a local terminal first, and the :code:`ControlMaster` settings will keep that connection alive.
 Then click the connection button, and let's move on.
 
-.. image:: https://code.visualstudio.com/assets/docs/remote/ssh/ssh-explorer-add-new.png
-    :alt: VS Code Remote SSH Explorer
-    :width: 600px
+.. image:: Images/vscode_connect_remote_ssh.png
+    :alt: VS Code Remote Explorer for SSH (if you cannot see the picture, use another browser)
+    :width: 400px
     :align: center
-
-(We should have picture here but IDK why it's not working)
-
-.. raw:: html
-
-   <p style="height:22px">
-     <a href="https://code.visualstudio.com/assets/docs/remote/ssh/ssh-explorer-add-new.png" >
-       <img src="https://code.visualstudio.com/assets/docs/remote/ssh/ssh-explorer-add-new.png"/>
-       <br> VS Code Remote SSH Explorer
-     </a>
-   </p>
 
 .. note::
     However, :code:`ControlMaster` is only available on Linux, so Windows users, you'll have to use some automation tools.
@@ -122,12 +111,17 @@ Optional extensions to consider:
 - Error Lens
     - Shows error messages inline, exactly where they occur in your code, so you don't have to scroll up and down to find them.
 - Github Copilot and Github Copilot Chat
-    - AI pair programming tool from GitHub to help you write code faster and more efficiently. Super useful for repetitive tasks and documentation writing.
+    - AI pair programming tool from GitHub to help you write code faster and more efficiently. Super useful for repetitive tasks and documentation writing. Students can get it for free by applying for `GitHub Education <https://github.com/education>`_ as a student.
 - Docs View
     - Displays hover documentation in the sidebar or panel.
 
 Common Problems with MPCDF Clusters
 ###################################
+
+First, it is good to know that VS Code has different setting levels: User, Remote Machine (e.g. :code:`Remote [SSH: <hostname>]`), and Workspace (more and more specific).
+You can find these subpage tags below the search bar in the settings page.
+These settings have precedence in the order of User < Remote < Workspace (for more details, see `here <https://code.visualstudio.com/docs/getstarted/settings#_settings-precedence>`_).
+To ensure you don't break your local settings, select the :code:`Remote [SSH: <hostname>]` tag to configure shared settings for the :code:`<hostname>` remote machine, and select the :code:`Workspace` tag for workspace-specific settings.
 
 The VS Code cannot automatically locate your :code:`conda` environments because it cannot :code:`module load` the :code:`conda` command.
 You have to manually set the :code:`python.condaPath` in the settings to the path of the :code:`conda` module, e.g. for :code:`anaconda/3/2023.03` on **ADA** it is :code:`/mpcdf/soft/SLE_15/packages/x86_64/anaconda/3/2023.03/bin/conda`.
@@ -135,7 +129,7 @@ Generally it is :code:`${ANACONDA_HOME}/bin/conda`.
 
 Also you may need to set :code:`python.analysis.extraPaths` in settings to enable Python code analysis for the packages you load with :code:`module load`, e.g. :code:`h5py-mpi` or :code:`mpi4py`.
 For example, on **ADA** you add :code:`/ada/u/system/soft/SLE_15/packages/skylake/mpi4py/intel_21.6.0-2021.6.0-anaconda_3_2023.03-2023.03-impi_2021.6-2021.6.0/3.1.4/lib/python3.10/site-packages` for :code:`mpi4py/3.1.4`, and :code:`/ada/u/system/soft/SLE_15/packages/skylake/h5py-mpi/intel_21.6.0-2021.6.0-anaconda_3_2023.03-2023.03-impi_2021.6-2021.6.0/3.8.0/lib/python3.10/site-packages` for :code:`h5py-mpi/3.8`.
-
+Still you can find these paths by :code:`module show <package>`.
 
 
 
@@ -149,7 +143,7 @@ Best Practices
 Rapid Development with Jupyter Notebooks
 ########################################
 
-You can run Jupyter notebooks directly on the remote machine. Just create an :code:`xxx.ipynb`` file, open it, and work as usual, but with more programming support from the VS Code extensions.
+You can run Jupyter notebooks directly on the remote machine. Just create an :code:`xxx.ipynb` file, open it, and work as usual, but with more programming support from the VS Code extensions.
 
 Debugging
 *********
@@ -174,7 +168,7 @@ For example, if you have your own Python package :code:`mypytools` and are worki
     %aimport mypytools.utils
     from mypytools.utils import my_tool_func, MyToolClass
 
-:code:`%autoreload 1` means "Reload all modules imported with :code:`%aimport`` every time before executing the Python code typed".
+:code:`%autoreload 1` means "Reload all modules imported with :code:`%aimport` every time before executing the Python code typed".
 
 Other Tricks
 ************
@@ -215,7 +209,7 @@ Use the following bash script to start a Jupyter server on the allocated node:
     # switch to conda env and activate modules, I like to put them in a shell script
     source ~/.env.ipi_mace.sh  # NOTE: replace with your own script!!!
 
-    # run a jupyter server with one gpu
+    # setup paths
     SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )  # the bash script dir
     WORK_DIR=${SCRIPT_DIR}
     LOG_DIR=${SCRIPT_DIR}/logs
@@ -227,6 +221,7 @@ Use the following bash script to start a Jupyter server on the allocated node:
         mkdir -p ${LOG_DIR}
     fi
 
+    # setup log files
     hpc_tag=${SLURM_JOB_ID}_$(date +%Y%m%d_%H%M%S_%3N)
     file_out=${LOG_DIR}/jupyter.${hpc_tag}.out
     file_err=${LOG_DIR}/jupyter.${hpc_tag}.err
@@ -234,6 +229,7 @@ Use the following bash script to start a Jupyter server on the allocated node:
     echo "file_out=${file_out}"
     echo "file_err=${file_err}"
 
+    # run a jupyter server with one gpu, redirect output and error to log files
     cd ${WORK_DIR}
     srun --job-name=jupyter --exclusive --partition=p.ada --chdir=${WORK_DIR} \
         --ntasks=1 --cpus-per-task=18 --mem=250000 --gres=gpu:a100:1 \
