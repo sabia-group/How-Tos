@@ -48,7 +48,7 @@ where :math:`\mathcal{F}\left[ \cdot \right]` is the Fourier transform of a func
 Function Documentation
 -----------------------
 
-.. autofunction:: tcf.tcf.autocorrelate
+.. automodule:: tcf.tcf.autocorrelate
    :noindex:
 
 .. literalinclude:: ../tcf/tcf.py
