@@ -7,3 +7,4 @@ nbconvert
 numpy
 scipy
 sympy
+pandoc

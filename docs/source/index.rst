@@ -26,7 +26,6 @@ How To ...
    remote_dev
    normal-modes/normal-modes
    time-correlation/time-correlation
-   ase-calculator/ase-calculator
    sysbath
    gle
    units
