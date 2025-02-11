@@ -20,6 +20,7 @@ How To ...
 .. toctree::
    :maxdepth: 2
 
+   stm-files/how-to-stm-afm
    eh_dynamics
    abs_spectrum
    tts
@@ -30,9 +31,9 @@ How To ...
    gle
    units
    thermostats
-   pimd-files/how-to-rmpd-trpmd-cmd.rst 
-   farthest_point_sampling
    remd_coefficient_search
+   pimd-files/how-to-rmpd-trpmd-cmd.rst
+   farthest_point_sampling
    2dcorr
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
