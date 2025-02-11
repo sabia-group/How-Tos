@@ -7,3 +7,9 @@
 
 ## MACE
     - how to compute derivatives using `autodiff`
+
+## Phonopy
+    - calculate the phonon modes with `phonopy`
+
+## Descriptor
+    - generate materials structure descriptors with different tools.
