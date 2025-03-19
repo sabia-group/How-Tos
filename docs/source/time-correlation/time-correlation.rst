@@ -51,7 +51,7 @@ Function Documentation
 .. autofunction:: tcf.tcf.autocorrelate
    :noindex:
 
-.. literalinclude:: ../tcf/tcf.py
+.. literalinclude:: ../../../tcf/tcf.py
    :language: python
 
 Usage Examples
@@ -100,13 +100,15 @@ The Vibrational Infrared Absorption spectrum :math:`S\left(\omega\right)`, at th
     \frac{\beta\omega^2}{6c\Omega\varepsilon_0} 
     \, \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right)
 
-where 
+where
+
     - :math:`\alpha\left(\omega\right)` is the Beer-Lambert absorption coefficient, 
     - :math:`n\left(\omega\right)` is the refractive index of the material, 
     - :math:`\beta = \frac{1}{k_B T}` is the thermodynamic beta, 
     - :math:`c` is the speed of light, 
     - :math:`\Omega` is the system volume
-    - :math:`\varepsilon_0` is the vacuum permittivity, 
+    - :math:`\varepsilon_0` is the vacuum permittivity,
+
 and clearly 
 
 .. math::
@@ -120,14 +122,17 @@ It is important to stress a couple of things:
         \boldsymbol{\mu}\star\boldsymbol{\mu}(t) \longrightarrow C_{\delta\boldsymbol{\mu},\delta\boldsymbol{\mu}}(t) 
         \quad \text{with} \quad
         \delta\boldsymbol{\mu} = \boldsymbol{\mu} - \braket{\boldsymbol{\mu}}
+
     and this means that, before computing any Fourier transform, one should remove the mean value of the time series.
     However, we will keep using the same notation as before for simplicity.
 
     - the definition of the infrared spectrum requires an integration over time which actually range in :math:`(-\infty,+\infty)`.
+
     The TCF of the dipole with itself is also time-reversible, i.e.
 
     .. math::
         \left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)(t) = \left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)(-t)
+
     and this implies that its Fourier transform in purely real.
 
     However, in numerical implementation we can only evaluate the monolateral Fourier transform :math:`\tilde{\mathcal{F}}[ \cdot ]`, whose output is complex since no integration over time for :math:`t\lt 0` occurs.
