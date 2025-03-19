@@ -35,5 +35,6 @@ How To ...
    farthest_point_sampling
    remd_coefficient_search
    2dcorr
+   mo-visualization/mo-visualization
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
