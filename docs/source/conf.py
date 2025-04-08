@@ -23,7 +23,8 @@ extensions = [
     'sphinx.ext.intersphinx',
     'nbsphinx',
     'sphinx.ext.viewcode',  # This allows linking or embedding source code
-    'sphinx_copybutton' # pip install sphinx-copybutton
+    'sphinx_copybutton', # pip install sphinx-copybutton
+    'sphinx_new_tab_link'
 ]
 
 # testing web code rendering
