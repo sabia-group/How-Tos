@@ -20,20 +20,20 @@ How To ...
 .. toctree::
    :maxdepth: 2
 
+   stm-files/how-to-stm-afm
    eh_dynamics
    abs_spectrum
    tts
    remote_dev
    normal-modes/normal-modes
    time-correlation/time-correlation
-   ase-calculator/ase-calculator
    sysbath
    gle
    units
    thermostats
-   pimd-files/how-to-rmpd-trpmd-cmd.rst 
-   farthest_point_sampling
    remd_coefficient_search
+   pimd-files/how-to-rmpd-trpmd-cmd.rst
+   farthest_point_sampling
    2dcorr
    mo-visualization/mo-visualization
 
