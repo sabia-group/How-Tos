@@ -161,3 +161,6 @@ cython_debug/
 
 # updating PYTHONPATH
 env.sh 
+
+# virtual environment
+.venv

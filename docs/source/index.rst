@@ -35,5 +35,6 @@ How To ...
    pimd-files/how-to-rmpd-trpmd-cmd.rst
    farthest_point_sampling
    2dcorr
+   mo-visualization/mo-visualization
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
