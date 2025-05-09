@@ -8,6 +8,8 @@ Contributed by George Trenins
     
     The procedure outlined below was only tested for ``ase-3.25.0``.
 
+The python script for driving the simulation and all accompanying input files can be downloaded :download:`here <../_static/neb_ase_aims.tar.gz>`.
+
 **********
 Band setup
 **********
@@ -209,16 +211,3 @@ The function :code:`write_launcher()` used in this and preceding section is
         # Add execute permission for user, group, and others
         filepath.chmod(mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
         return
-
-************
-Optimization
-************
-
-Basic setup
-^^^^^^^^^^^
-
-Restarting
-^^^^^^^^^^
-
-..
-    TODO: elsi read_write!!!
