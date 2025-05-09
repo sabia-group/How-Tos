@@ -8,7 +8,7 @@ Contributed by George Trenins
     
     The procedure outlined below was only tested for ``ase-3.25.0``.
 
-The python script for driving the simulation and all accompanying input files can be downloaded :download:`here <../_static/neb_ase_aims.tar.gz>`.
+The python script for driving the simulation and all accompanying input files can be downloaded :download:`here <../_static/neb_ase_aims.tar.gz>`. Below I explain the key parts of the ``main()`` section in the python script.
 
 **********
 Band setup
@@ -69,29 +69,7 @@ There are several ways to configure how the calculator gets launched. I recommen
     profile = AimsProfile("/path/to/launcher_script.sh")
     aims = Aims(profile=profile, ...) 
 
-Here, :file:`launcher_script.sh` should be an executable file that launches the calculator for the image (bead) to which we are attaching the calculator. We will generate the launcher scripts from within the python script driving the calculation and tailor their contents image by image, as I explain below.
-
-..
-    For example, for a calculation with :code:`num_images = 4`, launched on two nodes with 72 cores each, the launcher may read
-
-    .. code:: bash
-
-        #!/bin/bash
-        srun --exclusive --exact -N 1 -n 36 \
-            /path/to/aims.VERSION.scalapack.mpi.x < /dev/null > aims.out
-
-
-    The flags bear some explaining:
-
-    * :code:`-N 1` makes slurm reserves precisely one node for the job
-
-    * :code:`-n 36` spawns the indicated number of processes across the CPUs of the allocated node
-
-    * :code:`--exclusive` guarantees exclusive use of the CPUs: no other job steps may partake of the allocated resources
-
-    * :code:`--exact`  ensures the step only uses exactly the resources you requested
-
-    The :code:`--exact --exclusive` flag is optional, depending on system configuration.
+Here, :file:`launcher_script.sh` should be an executable file that launches the calculator for the image (bead) to which it is attached. We will generate the launcher scripts from within the python script driving the calculation and tailor their contents image by image, as I explain below.
 
 
 Port assignment
@@ -102,19 +80,19 @@ For a typical NEB optimization, I recommend using TCP/IP sockets (as opposed to 
 Calculator initialization
 =========================
 
-The exterior images (reactant and product) are treated differently to the interior images in NEB optimization, so we consider the two separately
+The exterior images (reactant and product) are treated differently to the interior images in NEB optimization, so we consider the two separately.
 
 Reactant and product
 ^^^^^^^^^^^^^^^^^^^^
 
-These structures do not change over the course of the optimization. For the most basic NEB optimization method (:code:`method = "aseneb"`) these images do not need a calculator attached at all. All other methods require the potential energies, but not the forces. Since the structures do not change, it is sufficient to compute the energies once and the close the calculator, best accomplished using a context manager. The computed energies are cached and persist after the calculator gets closed. At this stage, 
+These structures do not change over the course of the optimization. For the most basic NEB optimization method (:code:`method = "aseneb"`) these images do not need a calculator attached at all. All other methods require the potential energies, but not the forces. Since the structures do not change, it is sufficient to compute the energies once and then close the calculator, best accomplished using a context manager. The computed energies are cached and persist after the calculator is closed. At this stage, 
 the contents of :file:`launcher_script.sh`  for these images can be something like
 
 .. code::
 
     srun /path/to/aims.VERSION.scalapack.mpi.x < /dev/null > aims.out
 
-allowing ``aims`` to utilise all the available CPUs, since we compute the energies first for the reactant and the for the product, eliminating any competition for resources.
+allowing ``aims`` to utilise all the available CPUs, since we compute the energies first for the reactant and then for the product, so competition for resources is not an issue.
 
 .. code:: python
 
