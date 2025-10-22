@@ -61,7 +61,7 @@ In what follows, we will need to advertise the actual hostname of the driver nod
 Launcher scripts
 ================
 
-There are several ways to configure how the calculator gets launched. I recommend manually instantiating a "profiler":
+There are several ways to configure how the calculator gets launched. I recommend manually instantiating a "profile":
 
 .. code:: python
 
