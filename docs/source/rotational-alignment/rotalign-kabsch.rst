@@ -53,3 +53,27 @@ Function Documentation
 .. literalinclude:: ../../../tools/kabsch.py
    :language: python
 
+
+Usage Examples
+--------------
+
+.. code-block:: python
+
+    import numpy as np
+    from tools.kabsch import kabsch
+    from scipy.spatial.transform import Rotation as R
+
+    rng = np.random.default_rng(31415)
+    N = 10   # number of "atoms"
+    # Generate random structure
+    r1 = rng.uniform(low=-5, high=5, size=(N,3))
+    # Random rotation matrix
+    rot = R.random(random_state=rng).as_matrix()
+    r2 = r1 @ rot
+    new_rot, new_r2 = kabsch(r1, r2)
+    # These should be the same
+    print(f"{r1 = }")
+    print(f"{new_r2 = }")
+    # ...also these
+    print(f"{rot.T = }")
+    print(f"{new_rot = }")
