@@ -22,11 +22,15 @@ The subscripts refer to the :math:`N` atoms and :math:`\boldsymbol{q}` is their 
 In the end we want a radial momentum distribution, since during the simulation the molecule either way rotates. After averaging over the angles we get 
 
 .. math::
+   :label: n(p)
+
     n_k(p) = 4 \pi \int d\Delta \ \mathcal{N}_k(\Delta) \ \Delta^2 \frac{\hbar}{p \Delta} \sin \left( \frac{p \Delta}{\hbar}\right)
 
 where :math:`\mathcal{N}_k(\Delta)` can be sampled by running an open path PIMD simulation. The distance of the first and last bead :math:`P` of atom :math:`k` given by :math:`|\boldsymbol{q}_k^{(P)} - \boldsymbol{q}_k^{(1)}|` has to be calculated for each sample and then averaged via the following function
 
 .. math::
+   :label: estimator
+
     \mathcal{N}_k(\Delta) = \biggl \langle \frac{(2 \pi \sigma_P^2)^{-1/2}}{\Delta \ |\boldsymbol{q}_k^{(P)} - \boldsymbol{q}_k^{(1)}|} \left[  e^{-\frac{1}{2 \sigma_P^2} (\Delta - |\boldsymbol{q}_k^{(P)} - \boldsymbol{q}_k^{(1)}|)^2} - e^{-\frac{1}{2 \sigma_P^2} (\Delta + |\boldsymbol{q}_k^{(P)} - \boldsymbol{q}_k^{(1)}|)^2}\right] \biggr \rangle.
 
 Here we use :math:`\sigma_P^2 = \hbar^2 \beta/P m_k` with the inverse temperature :math:`\beta`, the amount of beads :math:`P` and the mass of the atom :math:`m_k`.
@@ -123,9 +127,108 @@ Lastly follows all information on the NVT ensemble.
     </system>
     </simulation>
 
+The full input file is provided in ``docs/source/open_paths/ipi_files/config.xml``. Additionally, the xyz files for the first and last beads are in that folder as well. 
+
 ********************************
 Processing the simulation output
 ********************************
+
+The output geometries from the simulation are used to first calculate distance between the first and last bead (in the code referenced as ``dist_H``). Then the radial estimator in equation :eq:`estimator` has to be constructed. Below is some code on how this can be done.
+
+.. code-block:: python
+
+  import numpy as np
+
+  def radial_estimator(delta, qP_q1, sigP):
+      """
+      Calculate the radial estimator for the end-to-end distance
+
+      Args:
+      delta (one dimensional array of floats): distances for which to 
+      evaluate the estimator
+      qP_q1 (float or one dimensional array): sampled distances
+      of the last and first bead
+      sigP (float): standard deviation of the Gaussians, 
+      sigP = sqrt(hbar^2 beta / (P m))
+
+      Returns:
+      N (one dimensional array): radial estimator as a 
+      function of delta (same length), is averaged over all qP_q1
+      distances
+      """
+      D, q = np.meshgrid(np.asarray(delta), np.asarray(qP_q1))
+      #delta in rows and qP_q1 in columns
+      a = (2 * np.pi * sigP**2)**(-0.5) / (D * q)
+      e1 = np.exp(-((D - q)**2)/(2 * sigP**2))
+      e2 = np.exp(-((D + q)**2)/(2 * sigP**2))
+      X = a * (e1 - e2)
+      N = np.mean(X, axis=0) # average over qP_q1 values in columns
+      return N
+
+On a range of 0.001 to 5 for the ``delta`` variable I calculate the radial estimator for differing amounts of points ``Num_d``. 
+
+.. code-block:: python
+
+   Num_d = [25, 50, 100, 200]
+   ds = [np.linspace(0.001, 5, Nd) for Nd in Num_d]
+   N_s = [radial_estimator(delta=d, qP_q1=dist_H, sigP=sigH) for d in ds]
+
+The resulting functions looks like this.
+
+.. image:: Images/estimator.png
+   :scale: 50%
+
+The radial momentum distribution is the given by the equation :eq:`n(p)`. A function that calculates this is:
+
+.. code-block:: python
+
+   def radial_momentum(delta, N, p, hbar=1):
+       """
+       Calculate the spherically averaged momentum distribution
+
+       Args:
+       delta (float or one dimensional array): distances for which 
+       the end-to-end distance is evaluated
+       N (one dimensional array): radial end-to-end estimator, same
+       length as delta
+       p (float or one dimensional array): momenta for which to calculate
+       the distribution
+       """
+       P, D = np.meshgrid(np.asarray(p), np.asarray(delta))
+       P, Nm = np.meshgrid(np.asarray(p), np.asarray(N))
+       # p in rows and delta dependence in columns
+       integrand = Nm * D**2 * hbar / (P * D) * np.sin(P * D / hbar)
+       del_D = integral_del(D)
+       av_int = integral_av(integrand)
+       I = integrate(del_D, av_int)
+       p_new = integral_av(p)
+       n = 4 * np.pi * I
+       return p_new, n
+
+All code is provided in ``docs/source/open_paths/momentum_distribution.py`` file, also the integration fucntions used in the previous code. 
+
+Trying different momentum grids and using the delta grid with 100 points
+
+.. code-block:: python
+
+   Num_p = [50, 100, 200, 400]
+   ps = [np.linspace(0.001, 50, N) for N in Num_p]
+   n_Hs = [radial_momentum(delta=ds[2], N=N_H, p=p) for p in ps]
+
+gives plots like this
+
+.. image:: Images/distribution.png
+   :scale: 40%
+
+.. note::
+   The momentum distributions coming out of these formulas are not normalized. One has to normalize :math:`p^2 \ n(p)` by its integral.
+
+Things to keep in mind or make tests based on:
+
+- Test if the distributions are converged w.r.t. the simulation time
+- If there are multiple atoms of the same type (but different symmetry) check whether the open path visits each one equally
+- from :math:`p^2 \ n(p)` you can calculate the kinetic energy, which can be compared to standard PIMD centroid-virial estimator
+- A harmonic analysis also allows calculation of the momentum distribution to compare to  
 
 **References**
 
