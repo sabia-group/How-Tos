@@ -20,6 +20,7 @@ How To ...
 .. toctree::
    :maxdepth: 2
 
+   Nudged Elastic Band (NEB) Calculations <neb/neb>
    stm-files/how-to-stm-afm
    eh_dynamics
    abs_spectrum
