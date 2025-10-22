@@ -26,6 +26,7 @@ How To ...
    tts
    remote_dev
    normal-modes/normal-modes
+   phonopy_simple/phonopy_in_python
    time-correlation/time-correlation
    sysbath
    gle
