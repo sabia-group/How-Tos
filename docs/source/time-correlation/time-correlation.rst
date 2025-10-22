@@ -18,6 +18,12 @@ Here are some examples:
 The way to compute these quantities depends on their definition of course, 
 but a general way to evaluate the TCF from the time series of microscopic quantities wil lbe provided in this following.
 
+.. attention::
+    This page is not complete.
+    Here is a list of things that will be added in the future:
+        - windowing
+        - padding
+        - practical examples and code
 
 ************************************
 Cross Correlation
@@ -162,7 +168,11 @@ A common trick
     \omega^2 \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) = 
     \mathcal{F}\left[\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right]\left(\omega\right)
 
-| Just for completeness, it is worth mentioning that this relation is valid only in the continuous case, while in the discrete case some care should be taken when evaluating the time derivative of the dipole [2]_. However, we are neglecting this aspect here for simplicity.
+.. attention::
+    Just for completeness, it is worth mentioning that this relation is valid only in the continuous case, while in the discrete case some care should be taken when evaluating the derivative of a function [2]_. 
+    You can find more information online under the topic of "modified wave number".
+    However, we are neglecting this aspect here for simplicity.
+
 | This relation shows that the TCF of the dipole time derivative decays faster, and we can also use this TCF to evaluate the infrared spectrum:
     
     .. math::
@@ -171,6 +181,8 @@ A common trick
         \frac{\beta}{3c\Omega\varepsilon_0} 
         {\rm Re} 
         \int_{0}^{+\infty} e^{-i \omega t} \left(\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right)\left(t\right) \, dt 
+
+
 
 .. [1] B. J. Braams, T. F. Miller, and D. E. Manolopoulos, Sum rule constraints on Kubo-transformed correlation functions, Chemical Physics Letters 418, 179 (2006)
 .. [2] Sunaina, Butola, M., & Khare, K. (2018). Calculating numerical derivatives using Fourier transform: Some pitfalls and how to avoid them. European Journal of Physics, 39(6), 065806
