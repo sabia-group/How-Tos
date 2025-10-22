@@ -26,6 +26,7 @@ How To ...
    tts
    remote_dev
    normal-modes/normal-modes
+   rotational-alignment/rotalign
    time-correlation/time-correlation
    sysbath
    gle
