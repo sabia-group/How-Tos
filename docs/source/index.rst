@@ -45,5 +45,6 @@ How To ...
    farthest_point_sampling
    2dcorr
    mo-visualization/mo-visualization
+   ters
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
