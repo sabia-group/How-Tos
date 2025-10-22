@@ -33,6 +33,7 @@ How To ...
    thermostats
    remd_coefficient_search
    pimd-files/how-to-rmpd-trpmd-cmd.rst
+   open_paths/open_path
    farthest_point_sampling
    2dcorr
    mo-visualization/mo-visualization
