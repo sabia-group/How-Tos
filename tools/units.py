@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*-coding:utf-8 -*-
 '''
+Contributed by George Trenins.
+
 Some common unit systems for converting to and from SI. A unit system is defined in terms of seven *base units* that span the dimensions of length, mass, time, electric current, amount of substance, luminous intensity, and thermodynamic temperature.
 '''
 

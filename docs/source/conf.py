@@ -3,6 +3,9 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
+html_extra_path = ['../../tools']
+html_static_path = ['_static']
+
 
 # -- Project information
 
@@ -23,7 +26,8 @@ extensions = [
     'sphinx.ext.intersphinx',
     'nbsphinx',
     'sphinx.ext.viewcode',  # This allows linking or embedding source code
-    'sphinx_copybutton' # pip install sphinx-copybutton
+    'sphinx_copybutton', # pip install sphinx-copybutton
+    'sphinx_new_tab_link'
 ]
 
 # testing web code rendering

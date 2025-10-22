@@ -1,0 +1,1 @@
+../../../tools/plot_stm_images.py
