@@ -28,7 +28,7 @@ analysis workflow.
        border-radius:6px;
        text-decoration:none;
        font-weight:500;">
-       💾 Download get_Te_curve.py
+       Download get_Te_curve.py
    </a>
 
 ---
@@ -44,16 +44,20 @@ At finite temperature, the centroid fluctuates around its equilibrium position :
 distribution, often approximated by a Gaussian with standard deviation :math:`\sigma(T)` that decreases as temperature increases.
 
 The goal is to identify a temperature range where :math:`r_{\text{cross}}` lies safely outside the tail of this distribution.
-In this regime, artificial instantons are avoided and CMD remains reliable.
+In this regime, artificial instantons are avoided and CMD remains reliable. This idea is illustrated in Figure 1.
 
 .. figure:: figures/CriticalRadiusMF2.png
    :width: 500px
    :align: center
 
-   **Figure 1:** At high temperature (600 K), the centroid distribution (shaded area) remains well separated from
-   :math:`r_{\text{cross}}` (dotted line), so the curvature problem is negligible. At intermediate temperature (400 K),
-   the tail approaches :math:`r_{\text{cross}}`, and at low temperature (200 K), they overlap substantially —
-   marking the onset of artificial instantons.
+   **Figure 1:** CMD quantum Boltzmann distributions of the centroid along the coordinate 
+   :math:`R_0 = \sqrt{X_0^{2} + Y_0^{2}}` for a two-dimensional “champagne-bottle” potential 
+   representing a vibrating and rotating O–H bond.  
+   At high temperature (600 K), the centroid distribution (shaded area) remains well separated 
+   from :math:`r_{\text{cross}}` (dotted line), so the curvature problem is negligible.  
+   At intermediate temperature (400 K), the tail approaches :math:`r_{\text{cross}}`, and at 
+   low temperature (200 K), they overlap substantially—marking the onset of artificial instantons.
+
 
 The procedure outlined in our recent `work <https://doi.org/10.48550/arXiv.2508.16246>`_
 provides a practical way to determine such ranges for the elevated temperature :math:`T_e`,
@@ -177,9 +181,9 @@ These define the range where the curvature problem is avoided without breaking t
 
 For each physical temperature :math:`T_{\text{phys}}`:
 
-* If :math:`T_{\text{candidate}} < T_{\text{low}}`: set :math:`T_e = T_{\text{low}}`
-* If :math:`T_{\text{candidate}} > T_{\text{high}}`: set :math:`T_e = T_{\text{phys}}`
-* Otherwise: set :math:`T_e = \max(T_{\text{candidate}}, T_{\text{phys}})`
+* If :math:`T_{\text{phys}} < T_{\text{high}}`: Compute Eq.14 and assign:
+  :math:`T_e` as the largest of :math:`T_{\text{candidate}}` and :math:`T_{\text{low}}`.
+* If :math:`T_{\text{phys}} > T_{\text{high}}`: set :math:`T_e = T_{\text{phys}}`.
 
 This produces the final :math:`T_e` vs. :math:`T_{\text{phys}}` mapping.
 
