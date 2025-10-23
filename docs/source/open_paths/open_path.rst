@@ -4,22 +4,22 @@ Momentum distributions from open path PIMD
 
 Contributed by Hannah Bertschi
 
-This tutorial shows how to set up an open path PIMD simulation in i-pi for the example of the water dimer with an open path on one of the hydrogens. Furthermore, it describes how the output from i-pi has to be used and processed to get the radial momentum distribution. Potential problems and how to test the results are provided as well. 
+This tutorial shows how to set up an open path PIMD simulation in i-pi for the example of the water dimer. Furthermore, it describes how the output from i-pi can be used and processed to get the radial momentum distribution. Potential problems and how to test the results are provided as well. 
 
 **********
 Background
 **********
 
-This section provides very minimal information on what equations are necessary to calculate the momentum distribution of an atom in a multi-atom molecule in three dimensions. For derivations please refer to [Pro]_ the supporting information also contain important information.
+This section provides very minimal information on what equations are necessary to calculate the momentum distribution of an atom in a multi-atom molecule in three dimensions. For derivations please refer to [Pro]_ its supporting information also contain important information.
 
 The momentum distribution of atom :math:`k` can be represented as a Fourier transform of the off-diagonal position matrix element of the density matrix :math:`e^{- \beta \hat{H}}/Z` 
 
 .. math::
     n_k(\boldsymbol{p}) = \frac{1}{(2 \pi \hbar)^3 Z} \int \ d\boldsymbol{\Delta} \  e^{\frac{i}{\hbar}\boldsymbol{p}\cdot \boldsymbol{\Delta}} \int d\{\boldsymbol{q}\} \bra{\boldsymbol{q}_1, \ldots \boldsymbol{q}_N} \ e^{- \beta \hat{H}} \ket{\boldsymbol{q}_1, \ldots \boldsymbol{q}_k + \boldsymbol{\Delta}, \ldots  \boldsymbol{q}_N}
 
-The subscripts refer to the :math:`N` atoms and :math:`\boldsymbol{q}` is their three dimensional position vector. The matrix element is off-diagonal, as there is a shift for atom :math:`k` of :math:`\boldsymbol{\Delta}`. The position matrix element can be sampled by running path-integral molecular dynamics, where on atom :math:`k` no spring between the first and last bead is present. 
+The subscripts refer to the :math:`N` atoms and :math:`\boldsymbol{q}` is their three dimensional position vector. The matrix element is off-diagonal, as there is a shift for atom :math:`k` of :math:`\boldsymbol{\Delta}`. The position matrix element can be sampled by running path-integral molecular dynamics, where on atom :math:`k` no spring connects the first and last bead. 
 
-In the end we want a radial momentum distribution, since during the simulation the molecule either way rotates. After averaging over the angles we get 
+In the end we want the radial momentum distribution, since during the simulation the molecule either way rotates. After averaging over the angles we get 
 
 .. math::
    :label: n(p)
@@ -41,7 +41,7 @@ i-pi inputs
 
 Similar to standard PIMD we run a molecular dynamics simulation in the NVT ensemble with multiple beads. Most of the input keywords stay the same as compared to the standard PIMD. We will go here through an example xml input file and highlight what input is special for the open path simulations. 
 
-Some thing to think about before/ when setting up the input file are (*italic* for what is shown in this example):
+Some things to think about before/ when setting up the input file are (*italic* for what is shown in this example):
 
 - What is the temperature of interest? *60 K* 
 - How many beads are necessary for the chosen temperature and system? *64 beads*
@@ -54,7 +54,7 @@ Some thing to think about before/ when setting up the input file are (*italic* f
 
 
 .. note::
-   The counting of indices in i-pi starts from zero. This is relevant for specifying the atom with an open path.
+   The counting of indices in i-pi starts from zero. This is relevant for specifying the atom with an open path and its first and last beads.
 
 Lets first look at what output to request:
 
@@ -71,9 +71,9 @@ Lets first look at what output to request:
       <checkpoint filename="chk" stride="2000" overwrite="true"/>
     </output>
 
-The momentum distribution depends on the distance between the first and last bead of the atom with the open path. Therefore these geometries need to be ouptput. This is done in two ways here, the line ``<properties stride='40' filename='H.q'> [ atom_x_path(1)] </properties>``. It outputs all the bead positions of atom 1 every 40 steps.  
+The momentum distribution depends on the distance between the first and last bead of the atom with the open path. Therefore these geometries need to be ouptput. This is done in two ways here. The line ``<properties stride='40' filename='H.q'> [ atom_x_path(1)] </properties>`` outputs all the bead positions of atom 1 every 40 steps.  
 
-Other than writing all bead positions of the atom with open path we can also write all atoms of some specific beads. The line ``<trajectory bead='-16' format='xyz' filename='pos' stride='40'> positions </trajectory>`` outputs every 16nth bead of each atom, i.e. including bead 0. And the next line outputs the geometry of the last bead 63. Each bead is output in a xyz file.
+Other than writing all bead positions of the atom of interest, we can also write the geometries of all atoms of some specific beads. The line ``<trajectory bead='-16' format='xyz' filename='pos' stride='40'> positions </trajectory>`` outputs every 16nth bead of each atom, i.e. including bead 0. And the next line outputs the geometry of the last bead 63. Each bead is output in a xyz file.
 
 Either option gives us the geometries of atom 1 for the first and last bead. These we will need to process in the following section to get the momentum distributions.
 
@@ -101,7 +101,7 @@ Here we tell i-pi to use 64 beads and read for initialization a restart file, wh
       <force forcefield='driver'/>
     </forces>
 
-This code block specifies the open path. In this case it is on atom 1 (counting from zero), which is a hydrgen atom.
+This code block specifies the open path. In this case it is on atom 1, which is a hydrgen atom.
 
 .. code-block:: xml
 
@@ -225,9 +225,9 @@ gives plots like this
 
 Things to keep in mind or make tests based on:
 
-- Test if the distributions are converged w.r.t. the simulation time
-- If there are multiple atoms of the same type (but different symmetry) check whether the open path visits each one equally
-- from :math:`p^2 \ n(p)` you can calculate the kinetic energy, which can be compared to standard PIMD centroid-virial estimator
+- Test if the distributions are converged with respect to the simulation time
+- If there are multiple atoms of the same type (but different symmetry) check whether the open path is on each one equally is much
+- From :math:`p^2 \ n(p)` you can calculate the kinetic energy, which can be compared to standard PIMD centroid-virial estimator
 - A harmonic analysis also allows calculation of the momentum distribution to compare to  
 
 **References**
