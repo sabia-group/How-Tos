@@ -189,3 +189,7 @@ The function :code:`write_launcher()` used in this and preceding section is
         # Add execute permission for user, group, and others
         filepath.chmod(mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
         return
+
+.. note::
+
+   Include ``#SBATCH --hint=nomultithread`` in the Slurm submission script to disable hyperthreading, ensuring each MPI task runs on a full physical core and achieves full CPU utilization.
