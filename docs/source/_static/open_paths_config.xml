@@ -1,0 +1,40 @@
+<simulation verbosity='low'>
+  <output prefix="simulation">
+    <properties stride='40' filename='out'>
+	    [ step, time{picosecond}, conserved, temperature{kelvin}, kinetic_cv, potential, kinetic_cv(2), kinetic_cv(1) ]
+    </properties>
+    <properties stride='40' filename='H.q'> [ atom_x_path(1)] </properties>
+    <trajectory bead='-16' format='xyz' filename='pos' stride='40'> positions </trajectory>
+    <trajectory bead='63' format='xyz' filename='posn' stride='40'> positions </trajectory>
+    <checkpoint filename="chk" stride="2000" overwrite="true"/>
+  </output>
+  <total_steps>100000</total_steps>
+  <prng>
+    <seed>3348</seed>
+  </prng>
+  <ffsocket mode='unix' name='driver'>
+    <address>mbx</address>
+  </ffsocket>
+  <system>
+    <initialize nbeads='64'>
+      <file mode='chk'> RESTART-64 </file>
+    </initialize>
+    <forces>
+      <force forcefield='driver'/>
+    </forces>
+    <normal_modes>
+      <open_paths> [1] </open_paths>
+    </normal_modes>
+    <ensemble>
+      <temperature units='kelvin'>60.0</temperature>
+    </ensemble>
+    <motion mode='dynamics'>
+      <dynamics mode='nvt' splitting='baoab'>
+	<thermostat mode='pile_l'>
+          <tau units='femtosecond'> 100 </tau>		
+        </thermostat>
+        <timestep units='femtosecond'>0.25</timestep>
+      </dynamics>
+    </motion>
+  </system>
+</simulation>
