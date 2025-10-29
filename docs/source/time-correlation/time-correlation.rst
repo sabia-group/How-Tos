@@ -16,7 +16,7 @@ Here are some examples:
 .. (nuclear velocities TCF)
 
 The way to compute these quantities depends on their definition of course, 
-but a general way to evaluate the TCF from the time series of microscopic quantities wil lbe provided in this following.
+but a general way to evaluate the TCF from the time series of microscopic quantities will be provided in the following.
 
 .. attention::
     This page is not complete.
@@ -28,7 +28,7 @@ but a general way to evaluate the TCF from the time series of microscopic quanti
 ************************************
 Cross Correlation
 ************************************
-The Time Correlation Functions (TCF) between two observables :math:`A,B` is defined through the `cross correlation <https://en.wikipedia.org/wiki/Cross-correlation>`_ (similar, but not the same of the `convolutuon <https://en.wikipedia.org/wiki/Convolution>`_) of their time series:
+The Time Correlation Function (TCF) between two observables :math:`A,B` is defined through the `cross correlation <https://en.wikipedia.org/wiki/Cross-correlation>`_ (similar, but not the same of the `convolutuon <https://en.wikipedia.org/wiki/Convolution>`_) of their time series:
 
 .. math::
 
@@ -38,7 +38,7 @@ The Time Correlation Functions (TCF) between two observables :math:`A,B` is defi
 
 A naive implementation of the previous formula would have a computation cost scaling as :math:`\mathcal{O}\left(N^2\right)` where :math:`N` is the size of the arrays (assumed to be of the same length for simplicity).
 
-However, we can exploit an analogous of the `convolution theorem <https://en.wikipedia.org/wiki/Convolution_theorem>`_ which allows to express the TCF as:
+However, we can exploit an analogue of the `convolution theorem <https://en.wikipedia.org/wiki/Convolution_theorem>`_ which allows to express the TCF as:
 
 .. math::
     A \star B = \mathcal{F}^{-1} \left[ \overline{\mathcal{F}}\left[ A \right] \cdot \mathcal{F}\left[ B \right] \right]
@@ -49,7 +49,7 @@ where :math:`\mathcal{F}\left[ \cdot \right]` is the Fourier transform of a func
     \mathcal{F}[ f ](\omega) \triangleq \int_{-\infty}^{+\infty} e^{-i \omega t} f(t) \, dt 
 
 
-| The Fourier transfrom has a computational cost of :math:`\mathcal{O}\left(N\log N\right)` thanks to the `Fast Foruier Transform (FFT) <https://en.wikipedia.org/wiki/Fast_Fourier_transform>`_ implementations.
+| The Fourier transfrom has a computational cost of :math:`\mathcal{O}\left(N\log N\right)` when evaluated using the `Fast Foruier Transform (FFT) <https://en.wikipedia.org/wiki/Fast_Fourier_transform>`_ algorithm.
 | For this reason, we will provide a way to evaluate the TCF using this "Fourier transform trick".
 | Here is a simple function that returns the TCF of an array with itself:
 
@@ -137,7 +137,7 @@ It is important to stress a couple of things:
     and this means that, before computing any Fourier transform, one should remove the mean value of the time series.
     However, we will keep using the same notation as before for simplicity.
 
-    - the definition of the infrared spectrum requires an integration over time which actually range in :math:`(-\infty,+\infty)`.
+    - the definition of the infrared spectrum requires an integration over time ranging from :math:`-\infty` to :math:`+\infty`.
 
     The TCF of the dipole with itself is also time-reversible, i.e.
 
@@ -146,7 +146,7 @@ It is important to stress a couple of things:
 
     and this implies that its Fourier transform in purely real.
 
-    However, in numerical implementation we can only evaluate the monolateral Fourier transform :math:`\tilde{\mathcal{F}}[ \cdot ]`, whose output is complex since no integration over time for :math:`t\lt 0` occurs.
+    However, in numerical implementation we can only evaluate the one-sided Fourier transform :math:`\tilde{\mathcal{F}}[ \cdot ]`, whose output is complex since no integration over time for :math:`t\lt 0` occurs.
 
     For this reason, to guarantee the correct calculation of the infrared spectrum, what is actually implemented numerically is
 
@@ -162,11 +162,11 @@ It is important to stress a couple of things:
 ************************************
 A common trick
 ************************************
-| Numerical simulations providing the dynamics over time of the dipole (as well as any other quantity) can be used to evaluate the previous formulas only if the simulat time is long enough and the dynamics is properly captured, i.e. if the integration time step is small enough.
-| In certain systems, like liquid water, properly sampling the long time behavior of :math:`\left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)\left(t\right)`, i.e. the low frequency behavior of its Fourier transform, can be challenging due to its intrisically "low dynamics".
-| This means that to properly sample the low frequency region of :math:`\mathcal{I}\left(\omega\right)`, extremely long simulations would be needed.
-| There is however a possible, or partial, solution that can be applied to the infrared spectrum, which consists in relating :math:`\left(\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right)\left(t\right)` with :math:`\boldsymbol{\mu}\star\boldsymbol{\mu}(t)`, i.e. the TCF of the dipole time derivative.
-| It is not hard to show that:
+Numerical dynamics simulations of time-dependent dipoles (as well as any other quantities) can be used to evaluate the previous formulas only if the simulation time is long enough and the dynamics are properly captured, i.e. if the integration time step is small enough.
+In certain systems, like liquid water, properly sampling the long-time behavior of :math:`\left(\boldsymbol{\mu}\star\boldsymbol{\mu}\right)\left(t\right)`, i.e. the low frequency behavior of its Fourier transform, can be challenging due to its intrinsically "slow dynamics".
+This means that to properly sample the low frequency region of :math:`\mathcal{I}\left(\omega\right)`, extremely long simulations would be needed.
+There is however a possible, or partial, solution that can be applied to the infrared spectrum, which consists in relating :math:`\left(\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right)\left(t\right)` with :math:`\boldsymbol{\mu}\star\boldsymbol{\mu}(t)`, i.e. the TCF of the dipole time derivative.
+It is not hard to show that:
 
 .. math::
     \omega^2 \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) = 
