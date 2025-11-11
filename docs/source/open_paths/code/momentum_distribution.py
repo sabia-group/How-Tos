@@ -6,7 +6,7 @@ def radial_estimator(delta, qP_q1, sigP):
 
     Args:
     delta (float one dimensional array): distances for which to 
-    evaluate the estimator
+    evaluate the estimator, assumes 0 to be the first entry
     qP_q1 (float or one dimensional array): sampled distances
     of the last and first bead
     sigP (float): standard deviation of the Gaussians, 
@@ -17,13 +17,16 @@ def radial_estimator(delta, qP_q1, sigP):
     function of delta (same length), is averaged over all qP_q1
     distances
     """
-    D, q = np.meshgrid(np.asarray(delta), np.asarray(qP_q1))
+    D, q = np.meshgrid(np.asarray(delta[1:]), np.asarray(qP_q1))
     #delta in rows and qP_q1 in columns
     a = (2 * np.pi * sigP**2)**(-0.5) / (D * q)
     e1 = np.exp(-((D - q)**2)/(2 * sigP**2))
     e2 = np.exp(-((D + q)**2)/(2 * sigP**2))
     X = a * (e1 - e2)
     N = np.mean(X, axis=0) # average over qP_q1 values in columns
+    # value at delta = 0
+    N0 = 2 * (2 * np.pi)**(-0.5) * sigP**(-3) * np.mean(np.exp(-np.asarray(qP_q1)**2/(2 * sigP**2)))
+    N = np.insert(N, 0, N0) 
     return N
 
 def integral_del(x):
@@ -85,7 +88,7 @@ def radial_momentum(delta, N, p, hbar=1):
 
     Args:
     delta (float or one dimensional array): distances for which 
-    the end-to-end distance is evaluated
+    the end-to-end distance is evaluated (first element is zero)
     N (one dimensional array): radial end-to-end estimator, same
     length as delta
     p (float or one dimensional array): momenta for which to calculate
@@ -93,8 +96,9 @@ def radial_momentum(delta, N, p, hbar=1):
     """
     P, D = np.meshgrid(np.asarray(p), np.asarray(delta))
     P, Nm = np.meshgrid(np.asarray(p), np.asarray(N))
-    # p in rows and delta dependence in columns
-    integrand = Nm * D**2 * hbar / (P * D) * np.sin(P * D / hbar)
+    integrand = Nm[:,1:] * D[:,1:] * (hbar/P[:,1:]) * np.sin(P[:,1:] * D[:,1:] / hbar)
+    integrand0 = np.asarray(N) * np.asarray(delta)**2 # evaluated at p=0
+    integrand = np.hstack([integrand0.reshape(len(integrand0), 1), integrand])
     del_D = integral_del(D)
     av_int = integral_av(integrand)
     I = integrate(del_D, av_int)
