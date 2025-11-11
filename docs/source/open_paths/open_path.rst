@@ -144,10 +144,10 @@ The output geometries from the simulation are used to first calculate the distan
       Calculate the radial estimator for the end-to-end distance
 
       Args:
-      delta (one dimensional array of floats): distances for which to 
-      evaluate the estimator
-      qP_q1 (float or one dimensional array): distances between the
-      last and the first bead computed from the sampled snapshots
+      delta (float one dimensional array): distances for which to 
+      evaluate the estimator, assumes 0 to be the first entry
+      qP_q1 (float or one dimensional array): sampled distances
+      of the last and first bead
       sigP (float): standard deviation of the Gaussians, 
       sigP = sqrt(hbar^2 beta / (P m))
 
@@ -156,21 +156,24 @@ The output geometries from the simulation are used to first calculate the distan
       function of delta (same length), is averaged over all qP_q1
       distances
       """
-      D, q = np.meshgrid(np.asarray(delta), np.asarray(qP_q1))
+      D, q = np.meshgrid(np.asarray(delta[1:]), np.asarray(qP_q1))
       #delta in rows and qP_q1 in columns
       a = (2 * np.pi * sigP**2)**(-0.5) / (D * q)
       e1 = np.exp(-((D - q)**2)/(2 * sigP**2))
       e2 = np.exp(-((D + q)**2)/(2 * sigP**2))
       X = a * (e1 - e2)
       N = np.mean(X, axis=0) # average over qP_q1 values in columns
+      # value at delta = 0
+      N0 = 2 * (2 * np.pi)**(-0.5) * sigP**(-3) * np.mean(np.exp(-np.asarray(qP_q1)**2/(2 * sigP**2)))
+      N = np.insert(N, 0, N0) 
       return N
 
-On a range of 0.001 to 5 for the ``delta`` variable I calculate the radial estimator for differing amounts of points ``Num_d``. 
+On a range of 0 to 5 for the ``delta`` variable I calculate the radial estimator for differing amounts of points ``Num_d``. 
 
 .. code-block:: python
 
    Num_d = [25, 50, 100, 200]
-   ds = [np.linspace(0.001, 5, Nd) for Nd in Num_d]
+   ds = [np.linspace(0, 5, Nd) for Nd in Num_d]
    N_s = [radial_estimator(delta=d, qP_q1=dist_H, sigP=sigH) for d in ds]
 
 The resulting functions looks like this.
@@ -182,28 +185,29 @@ The radial momentum distribution is the given by the equation :eq:`n(p)`. A func
 
 .. code-block:: python
 
-   def radial_momentum(delta, N, p, hbar=1):
-       """
-       Calculate the spherically averaged momentum distribution
+  def radial_momentum(delta, N, p, hbar=1):
+      """
+      Calculate the spherically averaged momentum distribution
 
-       Args:
-       delta (float or one dimensional array): distances for which 
-       the end-to-end distance is evaluated
-       N (one dimensional array): radial end-to-end estimator, same
-       length as delta
-       p (float or one dimensional array): momenta for which to calculate
-       the distribution
-       """
-       P, D = np.meshgrid(np.asarray(p), np.asarray(delta))
-       P, Nm = np.meshgrid(np.asarray(p), np.asarray(N))
-       # p in rows and delta dependence in columns
-       integrand = Nm * D**2 * hbar / (P * D) * np.sin(P * D / hbar)
-       del_D = integral_del(D)
-       av_int = integral_av(integrand)
-       I = integrate(del_D, av_int)
-       p_new = integral_av(p)
-       n = 4 * np.pi * I
-       return p_new, n
+      Args:
+      delta (float or one dimensional array): distances for which 
+      the end-to-end distance is evaluated (first element is zero)
+      N (one dimensional array): radial end-to-end estimator, same
+      length as delta
+      p (float or one dimensional array): momenta for which to calculate
+      the distribution
+      """
+      P, D = np.meshgrid(np.asarray(p), np.asarray(delta))
+      P, Nm = np.meshgrid(np.asarray(p), np.asarray(N))
+      integrand = Nm[:,1:] * D[:,1:] * (hbar/P[:,1:]) * np.sin(P[:,1:] * D[:,1:] / hbar)
+      integrand0 = np.asarray(N) * np.asarray(delta)**2 # evaluated at p=0
+      integrand = np.hstack([integrand0.reshape(len(integrand0), 1), integrand])
+      del_D = integral_del(D)
+      av_int = integral_av(integrand)
+      I = integrate(del_D, av_int)
+      p_new = integral_av(p)
+      n = 4 * np.pi * I
+      return p_new, n
 
 All code is provided in ``docs/source/open_paths/momentum_distribution.py`` file, also the integration fucntions used in the previous code. 
 
@@ -212,7 +216,7 @@ Trying different momentum grids and using the delta grid with 100 points
 .. code-block:: python
 
    Num_p = [50, 100, 200, 400]
-   ps = [np.linspace(0.001, 50, N) for N in Num_p]
+   ps = [np.linspace(0, 50, N) for N in Num_p]
    n_Hs = [radial_momentum(delta=ds[2], N=N_H, p=p) for p in ps]
 
 gives plots like this
