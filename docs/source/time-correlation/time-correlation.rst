@@ -172,10 +172,6 @@ It is not hard to show that:
     \omega^2 \mathcal{F}\left[\boldsymbol{\mu}\star\boldsymbol{\mu}\right]\left(\omega\right) = 
     \mathcal{F}\left[\dot{\boldsymbol{\mu}}\star\dot{\boldsymbol{\mu}}\right]\left(\omega\right)
 
-.. attention::
-    Just for completeness, it is worth mentioning that this relation is valid only in the continuous case, while in the discrete case some care should be taken when evaluating the derivative of a function [2]_. 
-    You can find more information online under the topic of "modified wave number".
-    However, we are neglecting this aspect here for simplicity.
 
 | This relation shows that the TCF of the dipole time derivative decays faster, and we can also use this TCF to evaluate the infrared spectrum:
     
@@ -189,4 +185,3 @@ It is not hard to show that:
 
 
 .. [1] B. J. Braams, T. F. Miller, and D. E. Manolopoulos, Sum rule constraints on Kubo-transformed correlation functions, Chemical Physics Letters 418, 179 (2006)
-.. [2] Sunaina, Butola, M., & Khare, K. (2018). Calculating numerical derivatives using Fourier transform: Some pitfalls and how to avoid them. European Journal of Physics, 39(6), 065806
