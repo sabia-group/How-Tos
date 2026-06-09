@@ -28,6 +28,7 @@ How To ...
 .. toctree::
    :maxdepth: 2
 
+   Nudged Elastic Band (NEB) Calculations <neb/neb>
    stm-files/how-to-stm-afm
    eh_dynamics
    abs_spectrum
@@ -42,9 +43,11 @@ How To ...
    thermostats
    remd_coefficient_search
    pimd-files/how-to-rmpd-trpmd-cmd.rst
+   open_paths/open_path
    farthest_point_sampling
    2dcorr
    mo-visualization/mo-visualization
    elevated_temperature/elevated_temperature
+   ters
 
 .. _this link: https://www.mpsd.mpg.de/research/groups/sabia
