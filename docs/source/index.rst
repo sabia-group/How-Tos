@@ -31,6 +31,7 @@ How To ...
    Nudged Elastic Band (NEB) Calculations <neb/neb>
    stm-files/how-to-stm-afm
    eh_dynamics
+   realspace_matrix_FHI-aims
    abs_spectrum
    tts
    remote_dev
